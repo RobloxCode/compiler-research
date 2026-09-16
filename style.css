@@ -1,0 +1,389 @@
+/*
+ * Old-school documentation style.
+ */
+
+body {
+    margin: 0;
+
+    background: #eeeeee;
+
+    color: #111111;
+
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 16px;
+}
+
+
+.page {
+    width: 1000px;
+
+    margin: 0 auto;
+
+    background: white;
+
+    min-height: 100vh;
+
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+}
+
+
+/*
+ * Header
+ */
+
+header {
+    border-bottom: 1px solid #aaaaaa;
+}
+
+.header-top {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 8px 15px;
+}
+
+.header-top h1 {
+    margin: 0;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 22px;
+
+    color: #0645ad;
+}
+
+
+.search input {
+    width: 180px;
+
+    padding: 3px;
+
+    border: 1px solid #aaaaaa;
+}
+
+.search button {
+    padding: 3px 8px;
+
+    background: #eeeeee;
+
+    border: 1px solid #999999;
+
+    cursor: pointer;
+}
+
+
+/*
+ * Navigation
+ */
+
+nav {
+    background: #f5f5f5;
+
+    padding: 6px 15px;
+
+    border-top: 1px solid #dddddd;
+}
+
+nav a {
+    margin-right: 18px;
+}
+
+
+/*
+ * Links
+ */
+
+a {
+    color: #0645ad;
+
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/*
+ * Main layout
+ */
+
+.layout {
+    display: grid;
+
+    grid-template-columns: 190px 1fr;
+}
+
+
+/*
+ * Sidebar
+ */
+
+aside {
+    padding: 15px;
+
+    background: #f5f5f5;
+
+    border-right: 1px solid #cccccc;
+
+    font-size: 14px;
+}
+
+aside h3 {
+    font-family: Arial, sans-serif;
+
+    font-size: 15px;
+
+    margin-top: 0;
+
+    border-bottom: 1px solid #cccccc;
+
+    padding-bottom: 3px;
+}
+
+aside ul {
+    list-style-type: none;
+
+    padding-left: 5px;
+}
+
+aside li {
+    margin-bottom: 6px;
+}
+
+aside p {
+    margin: 7px 0;
+}
+
+
+/*
+ * Content
+ */
+
+main {
+    padding: 25px 35px;
+}
+
+section {
+    margin-bottom: 45px;
+}
+
+h2 {
+    font-family: Arial, sans-serif;
+
+    font-size: 25px;
+
+    font-weight: normal;
+
+    margin-top: 0;
+
+    padding-bottom: 4px;
+
+    border-bottom: 1px solid #aaaaaa;
+}
+
+h3 {
+    font-family: Arial, sans-serif;
+
+    font-size: 18px;
+
+    margin-top: 25px;
+}
+
+p {
+    max-width: 750px;
+
+    line-height: 1.45;
+}
+
+
+/*
+ * Tables
+ */
+
+table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid #aaaaaa;
+
+    padding: 7px;
+
+    text-align: left;
+}
+
+th {
+    background: #eeeeee;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+}
+
+
+/*
+ * Lists
+ */
+
+li {
+    margin-bottom: 5px;
+}
+
+
+/*
+ * Footer
+ */
+
+footer {
+    border-top: 1px solid #aaaaaa;
+
+    padding: 10px 20px;
+
+    background: #f5f5f5;
+
+    font-size: 13px;
+
+    color: #555555;
+}
+
+
+/*
+ * Mobile
+ */
+
+@media (max-width: 1050px) {
+
+    .page {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .layout {
+        display: block;
+    }
+
+    aside {
+        border-right: none;
+
+        border-bottom: 1px solid #cccccc;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .header-top {
+        display: block;
+    }
+
+    .search {
+        margin-top: 10px;
+    }
+}
+/*
+ * Development diary
+ */
+
+.diary-editor {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #aaaaaa;
+}
+
+.diary-editor label {
+    display: block;
+
+    margin-top: 10px;
+    margin-bottom: 4px;
+
+    font-weight: bold;
+}
+
+.diary-editor input,
+.diary-editor textarea {
+    width: 100%;
+
+    padding: 6px;
+
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 16px;
+
+    border: 1px solid #999999;
+
+    background: white;
+
+    box-sizing: border-box;
+}
+
+.diary-editor textarea {
+    resize: vertical;
+}
+
+.diary-editor button {
+    margin-top: 10px;
+
+    padding: 5px 12px;
+
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 15px;
+
+    background: #eeeeee;
+
+    border: 1px solid #888888;
+
+    cursor: pointer;
+}
+
+.diary-editor button:hover {
+    background: #dddddd;
+}
+
+
+/*
+ * Diary entries
+ */
+
+.diary-entry {
+    margin-top: 30px;
+
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid #aaaaaa;
+}
+
+.diary-entry-date {
+    font-family: Arial, sans-serif;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: #111111;
+
+    margin-bottom: 10px;
+}
+
+.diary-entry-content {
+    white-space: pre-wrap;
+
+    line-height: 1.5;
+}

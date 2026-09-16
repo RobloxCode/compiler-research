@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Compiler Research</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="page">
+
+    <!-- Header -->
+
+    <header>
+
+        <div class="header-top">
+
+            <h1>Compiler Research</h1>
+
+            <div class="search">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search"
+                >
+
+                <button onclick="searchPage()">
+                    Search
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- Main navigation -->
+
+        <nav>
+
+            <a href="#home">Home</a>
+
+            <a href="#compiler">Compiler</a>
+
+            <a href="#experiments">Experiments</a>
+
+            <a href="#benchmarks">Benchmarks</a>
+
+            <a href="#research">Research</a>
+
+            <a href="#diary">Diary</a>
+
+            <a href="#changelog">Changelog</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- Main layout -->
+
+    <div class="layout">
+
+
+        <!-- Sidebar -->
+
+        <aside>
+
+            <h3>Contents</h3>
+
+            <ul>
+
+                <li>
+                    <a href="#introduction">
+                        Introduction
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#objective">
+                        Objective
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#compiler">
+                        Compiler
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#experiments">
+                        Experiments
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#benchmarks">
+                        Benchmarks
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#research">
+                        Research
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#diary">
+                        Development Diary
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#changelog">
+                        Changelog
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <h3>Compiler status</h3>
+
+            <p>
+                Lexer:
+                <strong>Complete</strong>
+            </p>
+
+            <p>
+                Parser:
+                <strong>In progress</strong>
+            </p>
+
+            <p>
+                Optimizer:
+                <strong>Planned</strong>
+            </p>
+
+        </aside>
+
+
+        <!-- Main content -->
+
+        <main>
+
+
+            <!-- Home -->
+
+            <section id="home">
+
+                <h2>Compiler Optimization Research</h2>
+
+                <p>
+                    This website documents the development of a custom
+                    compiler and the research conducted for my thesis.
+                </p>
+
+                <p>
+                    The main focus of the project is studying the impact
+                    of compiler optimizations and comparing their results
+                    with established compilers.
+                </p>
+
+            </section>
+
+
+
+            <!-- Introduction -->
+
+            <section id="introduction">
+
+                <h2>Introduction</h2>
+
+                <p>
+                    Compiler optimization is the process of transforming
+                    a program in order to improve characteristics such as
+                    execution time, memory usage or generated code size,
+                    while preserving the program's behavior.
+                </p>
+
+                <p>
+                    This project aims to implement several optimization
+                    techniques in a custom compiler and measure their
+                    effects through controlled experiments.
+                </p>
+
+            </section>
+
+
+
+            <!-- Objective -->
+
+            <section id="objective">
+
+                <h2>Objective</h2>
+
+                <p>
+                    The objective of this research is to investigate how
+                    different compiler optimizations affect the performance
+                    of generated programs.
+                </p>
+
+                <p>
+                    The results will be compared with optimization levels
+                    provided by established compilers such as
+                    <a href="https://gcc.gnu.org/">
+                        GCC
+                    </a>.
+                </p>
+
+            </section>
+
+
+
+            <!-- Compiler -->
+
+            <section id="compiler">
+
+                <h2>Compiler</h2>
+
+                <p>
+                    The compiler is being developed from scratch.
+                    Its development is divided into several stages.
+                </p>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Component</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                Lexer
+                            </td>
+
+                            <td>
+                                Converts source code into tokens.
+                            </td>
+
+                            <td>
+                                Complete
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Parser
+                            </td>
+
+                            <td>
+                                Builds the syntactic structure.
+                            </td>
+
+                            <td>
+                                In progress
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Semantic analysis
+                            </td>
+
+                            <td>
+                                Checks semantic rules and types.
+                            </td>
+
+                            <td>
+                                Planned
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Intermediate representation
+                            </td>
+
+                            <td>
+                                Internal representation of the program.
+                            </td>
+
+                            <td>
+                                Planned
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Optimizer
+                            </td>
+
+                            <td>
+                                Applies optimization transformations.
+                            </td>
+
+                            <td>
+                                Planned
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                Code generation
+                            </td>
+
+                            <td>
+                                Generates target code.
+                            </td>
+
+                            <td>
+                                Planned
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+
+            <!-- Experiments -->
+
+            <section id="experiments">
+
+                <h2>Experiments</h2>
+
+                <p>
+                    Experiments will be used to measure the effect of
+                    individual optimization techniques.
+                </p>
+
+
+                <h3>
+                    Experiment 001 — Constant Folding
+                </h3>
+
+                <p>
+                    Measure the effect of evaluating constant expressions
+                    during compilation rather than during program execution.
+                </p>
+
+                <p>
+                    Status:
+                    <strong>Planned</strong>
+                </p>
+
+
+                <h3>
+                    Experiment 002 — Dead Code Elimination
+                </h3>
+
+                <p>
+                    Measure the effect of removing instructions that do not
+                    contribute to the observable behavior of a program.
+                </p>
+
+                <p>
+                    Status:
+                    <strong>Planned</strong>
+                </p>
+
+            </section>
+
+
+
+            <!-- Benchmarks -->
+
+            <section id="benchmarks">
+
+                <h2>Benchmarks</h2>
+
+                <p>
+                    Benchmark results will be collected and documented here.
+                </p>
+
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Compiler
+                            </th>
+
+                            <th>
+                                Optimization
+                            </th>
+
+                            <th>
+                                Execution time
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                Custom compiler
+                            </td>
+
+                            <td>
+                                None
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                GCC
+                            </td>
+
+                            <td>
+                                -O0
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                GCC
+                            </td>
+
+                            <td>
+                                -O1
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                GCC
+                            </td>
+
+                            <td>
+                                -O2
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                GCC
+                            </td>
+
+                            <td>
+                                -O3
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+
+            <!-- Research -->
+
+            <section id="research">
+
+                <h2>Research</h2>
+
+
+                <h3>
+                    Research question
+                </h3>
+
+                <p>
+                    What is the impact of selected compiler optimizations
+                    on the performance of programs generated by a custom
+                    compiler compared with established compiler
+                    optimization levels?
+                </p>
+
+
+                <h3>
+                    Topics
+                </h3>
+
+                <ul>
+
+                    <li>
+                        Compiler construction
+                    </li>
+
+                    <li>
+                        Lexical analysis
+                    </li>
+
+                    <li>
+                        Parsing
+                    </li>
+
+                    <li>
+                        Intermediate representations
+                    </li>
+
+                    <li>
+                        Compiler optimization
+                    </li>
+
+                    <li>
+                        Code generation
+                    </li>
+
+                    <li>
+                        Performance measurement
+                    </li>
+
+                </ul>
+
+            </section>
+
+
+
+            <!-- Development Diary -->
+
+            <section id="diary">
+
+                <h2>Development Diary</h2>
+
+                <p>
+                    A chronological record of the development of the
+                    compiler and the progress of the research.
+                </p>
+
+
+                <div class="diary-editor">
+
+
+                    <label for="diaryDate">
+                        Date
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="diaryDate"
+                    >
+
+
+                    <label for="diaryText">
+                        What did you work on?
+                    </label>
+
+
+                    <textarea
+                        id="diaryText"
+                        rows="8"
+                        placeholder="Write about what you worked on today..."
+                    ></textarea>
+
+
+                    <button onclick="saveDiaryEntry()">
+                        Save entry
+                    </button>
+
+                </div>
+
+
+                <!-- Saved entries appear here -->
+
+                <div id="diaryEntries">
+
+                    <!-- JavaScript inserts entries here -->
+
+                </div>
+
+            </section>
+
+
+
+            <!-- Changelog -->
+
+            <section id="changelog">
+
+                <h2>Changelog</h2>
+
+
+                <h3>
+                    2026-09-16
+                </h3>
+
+                <p>
+                    Created the project documentation website.
+                </p>
+
+
+                <h3>
+                    this some examle of the date i guess
+                </h3>
+
+                <p>
+                    example of the desctription
+                </p>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <p>
+            Compiler Research ·
+            Last updated: September 16, 2026
+        </p>
+
+    </footer>
+
+
+</div>
+
+
+<!-- JavaScript -->
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
