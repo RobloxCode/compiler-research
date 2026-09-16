@@ -178,7 +178,45 @@ function readDiary() {
         return [];
     }
 
-    return parsed.filter(isValidEntry).map(normalizeEntry);
+    /*
+     * Entries written by the first version of this page have no id.
+     * normalizeEntry() invents one, and it would invent a different
+     * one on every read, so the id captured by an Edit or Delete
+     * button would never match the entry found a moment later.
+     * Give those entries a permanent id and write them back once.
+     */
+
+    let needsMigration = false;
+
+    const entries = parsed.filter(isValidEntry).map(function (item) {
+        const hasId = typeof item.id === "string" && item.id !== "";
+
+        const hasCreatedAt =
+            typeof item.createdAt === "string" && item.createdAt !== "";
+
+        if (!hasId || !hasCreatedAt) {
+            needsMigration = true;
+        }
+
+        return normalizeEntry(item);
+    });
+
+    if (needsMigration) {
+        try {
+            /*
+             * Keep one copy of the original data before rewriting it.
+             */
+            if (localStorage.getItem(DIARY_KEY + ".backup") === null) {
+                localStorage.setItem(DIARY_KEY + ".backup", raw);
+            }
+
+            localStorage.setItem(DIARY_KEY, JSON.stringify(entries));
+        } catch (error) {
+            console.error("Could not upgrade the stored entries:", error);
+        }
+    }
+
+    return entries;
 }
 
 
@@ -295,6 +333,12 @@ function startEditing(id) {
     });
 
     if (!entry) {
+        setDiaryStatus(
+            "That entry is no longer in storage. Reload the page.",
+            true
+        );
+
+        loadDiaryEntries();
         return;
     }
 
@@ -336,6 +380,12 @@ function deleteDiaryEntry(id) {
     });
 
     if (!entry) {
+        setDiaryStatus(
+            "That entry is no longer in storage. Reload the page.",
+            true
+        );
+
+        loadDiaryEntries();
         return;
     }
 
