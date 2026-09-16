@@ -24,15 +24,22 @@
 
             <div class="search">
 
+                <label class="visually-hidden" for="searchInput">
+                    Search this page
+                </label>
+
                 <input
-                    type="text"
+                    type="search"
                     id="searchInput"
                     placeholder="Search"
                 >
 
-                <button onclick="searchPage()">
+                <button type="button" id="searchButton">
                     Search
                 </button>
+
+                <span id="searchStatus" class="search-status"
+                      role="status" aria-live="polite"></span>
 
             </div>
 
@@ -128,20 +135,9 @@
 
             <h3>Compiler status</h3>
 
-            <p>
-                Lexer:
-                <strong>Complete</strong>
-            </p>
+            <!-- Rendered from COMPONENTS in script.js -->
 
-            <p>
-                Parser:
-                <strong>In progress</strong>
-            </p>
-
-            <p>
-                Optimizer:
-                <strong>Planned</strong>
-            </p>
+            <ul id="componentStatus" class="status-list"></ul>
 
         </aside>
 
@@ -231,7 +227,9 @@
                 </p>
 
 
-                <table>
+                <!-- Rows are rendered from COMPONENTS in script.js -->
+
+                <table id="componentTable">
 
                     <thead>
 
@@ -243,111 +241,7 @@
 
                     </thead>
 
-
-                    <tbody>
-
-                        <tr>
-
-                            <td>
-                                Lexer
-                            </td>
-
-                            <td>
-                                Converts source code into tokens.
-                            </td>
-
-                            <td>
-                                Complete
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-                                Parser
-                            </td>
-
-                            <td>
-                                Builds the syntactic structure.
-                            </td>
-
-                            <td>
-                                In progress
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-                                Semantic analysis
-                            </td>
-
-                            <td>
-                                Checks semantic rules and types.
-                            </td>
-
-                            <td>
-                                Planned
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-                                Intermediate representation
-                            </td>
-
-                            <td>
-                                Internal representation of the program.
-                            </td>
-
-                            <td>
-                                Planned
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-                                Optimizer
-                            </td>
-
-                            <td>
-                                Applies optimization transformations.
-                            </td>
-
-                            <td>
-                                Planned
-                            </td>
-
-                        </tr>
-
-
-                        <tr>
-
-                            <td>
-                                Code generation
-                            </td>
-
-                            <td>
-                                Generates target code.
-                            </td>
-
-                            <td>
-                                Planned
-                            </td>
-
-                        </tr>
-
-                    </tbody>
+                    <tbody></tbody>
 
                 </table>
 
@@ -408,6 +302,9 @@
 
                 <p>
                     Benchmark results will be collected and documented here.
+                    Each row records the machine, the number of repetitions
+                    and the variation between runs, so a result can be
+                    reproduced and defended rather than only reported.
                 </p>
 
 
@@ -422,11 +319,23 @@
                             </th>
 
                             <th>
-                                Optimization
+                                Flags
                             </th>
 
                             <th>
-                                Execution time
+                                Machine
+                            </th>
+
+                            <th>
+                                Runs
+                            </th>
+
+                            <th>
+                                Mean (ms)
+                            </th>
+
+                            <th>
+                                Std. dev. (ms)
                             </th>
 
                         </tr>
@@ -450,6 +359,18 @@
                                 --
                             </td>
 
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
                         </tr>
 
 
@@ -461,6 +382,18 @@
 
                             <td>
                                 -O0
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
                             </td>
 
                             <td>
@@ -484,6 +417,18 @@
                                 --
                             </td>
 
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
                         </tr>
 
 
@@ -501,6 +446,18 @@
                                 --
                             </td>
 
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
                         </tr>
 
 
@@ -512,6 +469,18 @@
 
                             <td>
                                 -O3
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
+                            </td>
+
+                            <td>
+                                --
                             </td>
 
                             <td>
@@ -598,6 +567,12 @@
                     compiler and the progress of the research.
                 </p>
 
+                <p class="diary-warning">
+                    Entries are held in this browser only. Export them and
+                    commit the file to the repository so the record
+                    survives a cleared cache or a different machine.
+                </p>
+
 
                 <div class="diary-editor">
 
@@ -625,20 +600,54 @@
                     ></textarea>
 
 
-                    <button onclick="saveDiaryEntry()">
-                        Save entry
+                    <div class="diary-editor-actions">
+
+                        <button type="button" id="diarySaveButton">
+                            Save entry
+                        </button>
+
+                        <button type="button" id="diaryCancelButton" hidden>
+                            Cancel
+                        </button>
+
+                    </div>
+
+
+                    <p id="diaryStatus" class="diary-status"
+                       role="status" aria-live="polite"></p>
+
+                </div>
+
+
+                <div class="diary-toolbar">
+
+                    <span id="diaryCount" class="diary-count"></span>
+
+                    <button type="button" id="exportJsonButton">
+                        Export JSON
                     </button>
+
+                    <button type="button" id="exportMarkdownButton">
+                        Export Markdown
+                    </button>
+
+                    <button type="button" id="importButton">
+                        Import JSON
+                    </button>
+
+                    <input
+                        type="file"
+                        id="importInput"
+                        accept="application/json,.json"
+                        hidden
+                    >
 
                 </div>
 
 
                 <!-- Saved entries appear here -->
 
-                <div id="diaryEntries">
-
-                    <!-- JavaScript inserts entries here -->
-
-                </div>
+                <div id="diaryEntries"></div>
 
             </section>
 
@@ -659,15 +668,6 @@
                     Created the project documentation website.
                 </p>
 
-
-                <h3>
-                    this some examle of the date i guess
-                </h3>
-
-                <p>
-                    example of the desctription
-                </p>
-
             </section>
 
 
@@ -683,7 +683,7 @@
 
         <p>
             Compiler Research ·
-            Last updated: September 16, 2026
+            Last updated: 16 September 2026
         </p>
 
     </footer>
