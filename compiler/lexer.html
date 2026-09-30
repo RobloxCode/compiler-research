@@ -170,11 +170,32 @@
                     does and where it sits in the compiler.
                 </p>
 
+                <p>
+                    <strong>Stages of Lexing</strong>
+
+                    <ul>
+                        <li>
+                            The lexer needs a source code to be tokenized,
+                            the lexer doesn't scan the whole file at the start,
+                            rather it scans as we go through
+                        </li>
+                        <li>
+                            Every item/character in the source code will be scanned,
+                            the scan will check if the character is eather an operator, a digit,
+                            keyword, identifier, String, etc.
+                        </li>
+                        <li>
+                            Once we now the type of the character, it is appended to an ArrayList
+                            of the type <strong>Token</strong>
+                        </li>
+                        <li>
+                            This process will continue on until EOF (end of file)
+                        </li>
+                    </ul>
+                </p>
             </section>
 
-
             <!-- Input and output -->
-
             <section id="io">
 
                 <h2>Input and output</h2>
