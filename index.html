@@ -45,25 +45,16 @@
 
         </div>
 
-
         <!-- Main navigation -->
 
         <nav>
-
             <a href="#home">Home</a>
-
             <a href="#compiler">Compiler</a>
-
             <a href="#experiments">Experiments</a>
-
             <a href="#benchmarks">Benchmarks</a>
-
             <a href="#research">Research</a>
-
             <a href="#diary">Diary</a>
-
             <a href="#changelog">Changelog</a>
-
         </nav>
 
     </header>
@@ -97,6 +88,24 @@
                 <li>
                     <a href="#compiler">
                         Compiler
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#compiler">
+                        Compiler
+                    </a>
+                </li>
+
+                <li>
+                    <a href="lexer.html">
+                        Lexer
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#experiments">
+                        Experiments
                     </a>
                 </li>
 
@@ -141,52 +150,40 @@
 
         </aside>
 
-
         <!-- Main content -->
 
         <main>
 
-
             <!-- Home -->
 
             <section id="home">
-
                 <h2>Compiler Optimization Research</h2>
-
                 <p>
                     This website documents the development of a custom
                     compiler and the research conducted for my thesis.
                 </p>
-
                 <p>
                     The main focus of the project is studying the impact
                     of compiler optimizations and comparing their results
                     with established compilers.
                 </p>
-
             </section>
-
-
 
             <!-- Introduction -->
 
             <section id="introduction">
-
                 <h2>Introduction</h2>
-
                 <p>
                     Compiler optimization is the process of transforming
                     a program in order to improve characteristics such as
                     execution time, memory usage or generated code size,
                     while preserving the program's behavior.
                 </p>
-
                 <p>
                     This project aims to implement several optimization
                     techniques in a custom compiler and measure their
                     effects through controlled experiments.
                 </p>
-
             </section>
 
 
@@ -194,15 +191,12 @@
             <!-- Objective -->
 
             <section id="objective">
-
                 <h2>Objective</h2>
-
                 <p>
                     The objective of this research is to investigate how
                     different compiler optimizations affect the performance
                     of generated programs.
                 </p>
-
                 <p>
                     The results will be compared with optimization levels
                     provided by established compilers such as
@@ -210,39 +204,27 @@
                         GCC
                     </a>.
                 </p>
-
             </section>
 
-
-
             <!-- Compiler -->
-
             <section id="compiler">
-
                 <h2>Compiler</h2>
-
                 <p>
                     The compiler is being developed from scratch.
                     Its development is divided into several stages.
                 </p>
 
-
                 <!-- Rows are rendered from COMPONENTS in script.js -->
 
                 <table id="componentTable">
-
                     <thead>
-
                         <tr>
                             <th>Component</th>
                             <th>Description</th>
                             <th>Status</th>
                         </tr>
-
                     </thead>
-
                     <tbody></tbody>
-
                 </table>
 
             </section>
@@ -252,32 +234,24 @@
             <!-- Experiments -->
 
             <section id="experiments">
-
                 <h2>Experiments</h2>
-
                 <p>
                     Experiments will be used to measure the effect of
                     individual optimization techniques.
                 </p>
-
                 <h3>
                     Experiment 001 — Constant Folding
                 </h3>
-
                 <p>
                     Evaluates expressions whose operands are known constants at compile time (for example, replacing <b>x = 3 + 5</b> with <b>x = 8</b>), avoiding calculating the sum during every execution.
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 002 — Constant Propagation
                 </h3>
-
                 <p>
                     Replaces subsequent uses of a variable with its known constant value at a given point in the program. For example, if <b>a = 10</b> and later <b>b = a + 2</b> is used, it can be rewritten directly as <b>b = 12</b> when combined with constant folding.
                 </p>
@@ -286,80 +260,58 @@
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 003 — Dead Code Elimination (DCE)
                 </h3>
-
                 <p>
                     Removes instructions whose results are never used or that are unreachable (such as code following a <b>return</b> statement or variables assigned but never read), reducing code size without changing observable behavior.
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 004 — Common Subexpression Elimination (CSE)
                 </h3>
-
                 <p>
                     Detects when the exact same expression is calculated multiple times with identical, unchanged operands, reusing the previously calculated result instead of recomputing it.
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 005 — Loop-Invariant Code Motion (LICM)
                 </h3>
-
                 <p>
                     Identifies computations inside a loop whose results do not change across iterations and moves them outside the loop so they execute only once instead of every iteration.
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 006 — Loop Unrolling
                 </h3>
-
                 <p>
                     Reduces the number of iterations in a loop by replicating its body multiple times within a single iteration, decreasing loop control overhead (comparisons, jumps, counter increments) at the cost of larger code size.
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
-
-
                 <h3>
                     Experiment 007 — Auto-vectorization
                 </h3>
-
                 <p>
                     Transforms repetitive scalar operations (such as element-by-element array addition) into SIMD instructions that process multiple data points in parallel using processor vector registers (such as SSE/AVX on x86-64).
                 </p>
-
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
 
-
             </section>
-
 
 
             <!-- Benchmarks -->
@@ -622,8 +574,6 @@
 
             </section>
 
-
-
             <!-- Development Diary -->
 
             <section id="diary">
@@ -669,17 +619,13 @@
 
 
                     <div class="diary-editor-actions">
-
                         <button type="button" id="diarySaveButton">
                             Save entry
                         </button>
-
                         <button type="button" id="diaryCancelButton" hidden>
                             Cancel
                         </button>
-
                     </div>
-
 
                     <p id="diaryStatus" class="diary-status"
                        role="status" aria-live="polite"></p>
@@ -712,9 +658,7 @@
 
                 </div>
 
-
                 <!-- Saved entries appear here -->
-
                 <div id="diaryEntries"></div>
 
             </section>
@@ -722,38 +666,28 @@
 
 
             <!-- Changelog -->
-
             <section id="changelog">
-
                 <h2>Changelog</h2>
-
-
                 <h3>
                     2026-09-16
                 </h3>
-
                 <p>
                     Created the project documentation website.
                 </p>
 
             </section>
 
-
         </main>
 
     </div>
 
-
-
     <!-- Footer -->
 
     <footer>
-
         <p>
             Compiler Research ·
             Last updated: 16 September 2026
         </p>
-
     </footer>
 
 
