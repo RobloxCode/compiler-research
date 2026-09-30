@@ -266,6 +266,8 @@
                 </h3>
 
                 <p>
+                    Evaluates constant expressions at compile time and replaces 
+                    them with  the computed result (for example replacing <b>3 * 2</b> with <b>6</b>)
                     Measure the effect of evaluating constant expressions
                     during compilation rather than during program execution.
                 </p>
@@ -275,20 +277,63 @@
                     <strong>Planned</strong>
                 </p>
 
+                <!--  Second experiment -->
 
                 <h3>
                     Experiment 002 — Dead Code Elimination
                 </h3>
 
                 <p>
-                    Measure the effect of removing instructions that do not
-                    contribute to the observable behavior of a program.
+                    Removes code that does not affect the program's results, helping
+                    to reduce the program size and improve performance
                 </p>
 
                 <p>
                     Status:
                     <strong>Planned</strong>
                 </p>
+
+                <h3>
+                    Experiment 003 — Loop-invariant code motion
+                </h3>
+
+                <p>
+                    Moves code that produces the same result in every iteration 
+                    of a loop outside the loop itself
+                </p>
+
+                <p>
+                    Status:
+                    <strong>Planned</strong>
+                </p>
+
+                <h3>
+                    Experiment 004 — Loop unrolling
+                </h3>
+
+                <p>
+                    Eliminates the overhead associated with loop control and replaces
+                    the loop with multiple copies of its body
+                </p>
+
+                <p>
+                    Status:
+                    <strong>Planned</strong>
+                </p>
+
+                <h3>
+                    Experiment 005 — auto-vectorization
+                </h3>
+
+                <p>
+                    Converts scalar operations in loops into vector operations
+                </p>
+
+                <p>
+                    Status:
+                    <strong>Planned</strong>
+                </p>
+
 
             </section>
 
