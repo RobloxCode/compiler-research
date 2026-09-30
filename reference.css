@@ -1,0 +1,163 @@
+/*
+ * API reference style (Types / Functions), in the spirit of cppreference.
+ * Loaded after style.css. Put this file next to style.css.
+ */
+
+code {
+    font-family: "Courier New", Courier, monospace;
+
+    font-size: 14px;
+
+    background: #f5f5f5;
+
+    padding: 0 3px;
+}
+
+pre {
+    max-width: 750px;
+
+    margin: 12px 0;
+
+    padding: 10px 12px;
+
+    overflow-x: auto;
+
+    background: #f5f5f5;
+
+    border: 1px solid #cccccc;
+
+    line-height: 1.4;
+}
+
+pre code {
+    padding: 0;
+
+    background: none;
+
+    font-size: 14px;
+}
+
+.pipeline {
+    text-align: center;
+}
+
+
+/*
+ * Summary tables (list of types / functions)
+ */
+
+table.ref {
+    width: auto;
+
+    min-width: 70%;
+
+    margin: 10px 0 25px;
+
+    border-collapse: collapse;
+}
+
+table.ref td {
+    padding: 5px 14px 5px 0;
+
+    border: none;
+    border-top: 1px solid #cccccc;
+
+    vertical-align: top;
+}
+
+table.ref tr.ref-file td {
+    padding: 0 0 3px;
+
+    border-top: none;
+
+    font-size: 13px;
+
+    color: #555555;
+}
+
+table.ref tr.ref-file + tr td {
+    border-top: 1px solid #aaaaaa;
+}
+
+table.ref td.ref-name {
+    width: 200px;
+
+    font-family: "Courier New", Courier, monospace;
+
+    font-weight: bold;
+
+    white-space: nowrap;
+}
+
+.ref-kind {
+    display: block;
+
+    font-size: 13px;
+
+    color: #2a7a2a;
+}
+
+.ref-group {
+    margin: 22px 0 0;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 16px;
+
+    font-weight: bold;
+}
+
+
+/*
+ * Detailed entry for a single type or function
+ */
+
+.ref-entry {
+    margin: 30px 0;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #aaaaaa;
+
+    scroll-margin-top: 15px;
+}
+
+.ref-entry h4 {
+    margin: 0 0 8px;
+
+    font-family: "Courier New", Courier, monospace;
+
+    font-size: 18px;
+}
+
+.ref-entry h5 {
+    margin: 18px 0 4px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+}
+
+.ref-entry dl {
+    max-width: 750px;
+
+    margin: 0;
+}
+
+.ref-entry dt {
+    margin-top: 6px;
+
+    font-family: "Courier New", Courier, monospace;
+
+    font-weight: bold;
+}
+
+.ref-entry dd {
+    margin: 2px 0 0 25px;
+
+    line-height: 1.4;
+}
+
+.ref-output {
+    background: #ffffff;
+}

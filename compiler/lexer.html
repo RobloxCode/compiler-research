@@ -8,6 +8,7 @@
     <title>Lexer - Compiler Research</title>
 
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../reference.css">
 </head>
 
 <body>
@@ -53,53 +54,27 @@
 
             <ul>
 
-                <li>
-                    <a href="#overview">
-                        Overview
-                    </a>
-                </li>
+                <li><a href="#overview">Overview</a></li>
 
-                <li>
-                    <a href="#io">
-                        Input and output
-                    </a>
-                </li>
+                <li><a href="#stages">Stages of lexing</a></li>
 
-                <li>
-                    <a href="#tokens">
-                        Token types
-                    </a>
-                </li>
+                <li><a href="#io">Input and output</a></li>
 
-                <li>
-                    <a href="#data-structures">
-                        Data structures
-                    </a>
-                </li>
+                <li><a href="#tokens">Token types</a></li>
 
-                <li>
-                    <a href="#implementation">
-                        Implementation
-                    </a>
-                </li>
+                <li><a href="#data-structures">Data structures</a></li>
 
-                <li>
-                    <a href="#examples">
-                        Examples
-                    </a>
-                </li>
+                <li><a href="#types">Types</a></li>
 
-                <li>
-                    <a href="#problems">
-                        Problems
-                    </a>
-                </li>
+                <li><a href="#functions">Functions</a></li>
 
-                <li>
-                    <a href="#references">
-                        References
-                    </a>
-                </li>
+                <li><a href="#implementation">Implementation</a></li>
+
+                <li><a href="#examples">Examples</a></li>
+
+                <li><a href="#problems">Problems</a></li>
+
+                <li><a href="#references">References</a></li>
 
             </ul>
 
@@ -128,72 +103,109 @@
                 <h2>Lexer</h2>
 
                 <p>
-                    A lexer is a program that converts a sequence of characters into a sequence
-                    of tokens, which are the smallest units of meaning an a programming language. 
-                    It is often the first phase of a compiler, processing input to identify 
-                    elements like identifiers, operators and keywords
+                    A lexer (also called a tokenizer or scanner) converts a
+                    sequence of characters into a sequence of tokens, which
+                    are the smallest units of meaning in a programming
+                    language. It is the first phase of a compiler: it reads
+                    the raw source text and identifies elements such as
+                    identifiers, operators and keywords, so that the later
+                    phases can work with those instead of individual
+                    characters.
+                </p>
 
+                <p class="pipeline">
+                    <em>source text &rarr; <strong>lexer</strong> &rarr;
+                    tokens &rarr; parser &rarr; AST</em>
                 </p>
-                    
+
+                <h3>Lexeme and token</h3>
+
                 <p>
-                    <strong>Functionality</strong>
+                    A <strong>lexeme</strong> is the exact text found in the
+                    source, for example <code>count</code> or <code>==</code>.
+                    A <strong>token</strong> is what the lexer produces for
+                    it: a category (identifier, operator, ...), the lexeme
+                    itself, and its position in the file.
                 </p>
-                <p>
-                    <strong>Key roles</strong>
-                </p>
+
+                <h3>Key roles</h3>
 
                 <ul>
-                    <li><strong>Tokenization:</strong> The lexer takes some source and
-                        turns it into meaningful tokens
+                    <li>
+                        <strong>Tokenization:</strong> takes the source text
+                        and turns it into meaningful tokens.
                     </li>
-                    <li><strong>First Phase of Compilation:</strong> It is typically the first
-                        step in the compilation process, preparing the input for further analysis
+                    <li>
+                        <strong>Skipping what the parser does not need:</strong>
+                        whitespace and comments are recognized and discarded.
+                    </li>
+                    <li>
+                        <strong>Tracking positions:</strong> every token
+                        remembers its line and column, so later phases can
+                        report precise errors.
+                    </li>
+                    <li>
+                        <strong>Reporting lexical errors:</strong> unknown
+                        characters, unterminated strings and malformed numbers
+                        are detected here.
+                    </li>
+                    <li>
+                        <strong>First phase of compilation:</strong> it
+                        prepares the input for the parser.
                     </li>
                 </ul>
 
-                <p>
-                    <strong>Types of Tokens</strong>
-                </p>
+                <h3>Kinds of tokens</h3>
 
-                <p>Types of tokens can include various elements, such as: </p>
+                <p>Tokens usually fall into categories such as:</p>
 
                 <ul>
-                    <li>Identifiers (e.g., variable names)</li>
-                    <li>Operators (e.g., +,-,*)</li>
-                    <li>Keywords(e.g., if, else, return, for)</li>
-                    <li>Grouping symbols (e.g., parentheses, brackets)</li>
-                    <li>Data types (e.g., int, float)</li>
+                    <li>Identifiers (e.g., variable and function names)</li>
+                    <li>Keywords (e.g., <code>if</code>, <code>else</code>, <code>return</code>, <code>for</code>, and type names such as <code>int</code> and <code>float</code>)</li>
+                    <li>Literals (e.g., <code>42</code>, <code>3.14</code>, <code>"text"</code>)</li>
+                    <li>Operators (e.g., <code>+</code>, <code>-</code>, <code>*</code>, <code>==</code>)</li>
+                    <li>Grouping symbols and separators (e.g., parentheses, brackets, braces, <code>;</code>)</li>
                 </ul>
 
-                <p>
-                    Write a short description of the lexer here: what it
-                    does and where it sits in the compiler.
-                </p>
-
-                <p>
-                    <strong>Stages of Lexing</strong>
-
-                    <ul>
-                        <li>
-                            The lexer needs a source code to be tokenized,
-                            the lexer doesn't scan the whole file at the start,
-                            rather it scans as we go through
-                        </li>
-                        <li>
-                            Every item/character in the source code will be scanned,
-                            the scan will check if the character is eather an operator, a digit,
-                            keyword, identifier, String, etc.
-                        </li>
-                        <li>
-                            Once we now the type of the character, it is appended to an ArrayList
-                            of the type <strong>Token</strong>
-                        </li>
-                        <li>
-                            This process will continue on until EOF (end of file)
-                        </li>
-                    </ul>
-                </p>
             </section>
+
+
+            <!-- Stages -->
+            <section id="stages">
+
+                <h2>Stages of lexing</h2>
+
+                <ol>
+                    <li>
+                        The lexer receives the source code and reads it from
+                        start to end, one character at a time, keeping track
+                        of the current position, line and column.
+                    </li>
+                    <li>
+                        At each step it looks at the current character and
+                        decides what kind of token starts there: an operator,
+                        a digit, a keyword or identifier, a string, etc.
+                    </li>
+                    <li>
+                        When several tokens could match, it takes the longest
+                        one (<em>maximal munch</em>): <code>&lt;=</code> is a
+                        single token, not <code>&lt;</code> followed by
+                        <code>=</code>.
+                    </li>
+
+                    <li>
+                        Once the type is known, the token is appended to the
+                        list of tokens (an array of <a href="#Token">Token</a>).
+                    </li>
+                    <li>
+                        This continues until the end of the file (EOF), which
+                        is also stored as a token so the parser knows where
+                        the input ends.
+                    </li>
+                </ol>
+
+            </section>
+
 
             <!-- Input and output -->
             <section id="io">
@@ -201,18 +213,51 @@
                 <h2>Input and output</h2>
 
                 <p>
-                    What the lexer receives and what it produces.
+                    The lexer receives the source text and produces a list
+                    of tokens. For the input <code>int x = 3 + 5;</code> it
+                    produces:
                 </p>
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>#</th>
+                            <th>Token type</th>
+                            <th>Lexeme</th>
+                            <th>Line:Column</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr><td>1</td><td>KEYWORD</td><td><code>int</code></td><td>1:1</td></tr>
+                        <tr><td>2</td><td>IDENTIFIER</td><td><code>x</code></td><td>1:5</td></tr>
+                        <tr><td>3</td><td>OPERATOR</td><td><code>=</code></td><td>1:7</td></tr>
+                        <tr><td>4</td><td>NUMBER</td><td><code>3</code></td><td>1:9</td></tr>
+                        <tr><td>5</td><td>OPERATOR</td><td><code>+</code></td><td>1:11</td></tr>
+                        <tr><td>6</td><td>NUMBER</td><td><code>5</code></td><td>1:13</td></tr>
+                        <tr><td>7</td><td>PUNCT</td><td><code>;</code></td><td>1:14</td></tr>
+                        <tr><td>8</td><td>EOF</td><td></td><td>1:15</td></tr>
+
+                    </tbody>
+
+                </table>
 
             </section>
 
 
-
             <!-- Token types -->
-
             <section id="tokens">
 
                 <h2>Token types</h2>
+
+                <p>
+                    Replace these rows with the exact token types of your
+                    lexer.
+                </p>
 
                 <table>
 
@@ -228,11 +273,14 @@
 
                     <tbody>
 
-                        <tr>
-                            <td>--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
+                        <tr><td>KEYWORD</td><td><code>int</code>, <code>if</code>, <code>return</code></td><td>Reserved words</td></tr>
+                        <tr><td>IDENTIFIER</td><td><code>x</code>, <code>count</code></td><td>Names chosen by the programmer</td></tr>
+                        <tr><td>NUMBER</td><td><code>42</code>, <code>3.14</code></td><td>Integer and floating-point literals</td></tr>
+                        <tr><td>STRING</td><td><code>"hello"</code></td><td>Between double quotes</td></tr>
+                        <tr><td>OPERATOR</td><td><code>+</code>, <code>==</code>, <code>&lt;=</code></td><td>Longest match wins</td></tr>
+                        <tr><td>PUNCT</td><td><code>(</code> <code>)</code> <code>{</code> <code>}</code> <code>;</code></td><td>Grouping and separators</td></tr>
+                        <tr><td>EOF</td><td>(end of input)</td><td>Always the last token</td></tr>
+                        <tr><td>INVALID</td><td><code>@</code></td><td>Character the language does not allow</td></tr>
 
                     </tbody>
 
@@ -241,23 +289,247 @@
             </section>
 
 
-
             <!-- Data structures -->
-
             <section id="data-structures">
 
                 <h2>Data structures</h2>
 
                 <p>
-                    How tokens are represented and stored.
+                    How tokens are represented and stored. See
+                    <a href="#Token"><code>Token</code></a> below for the
+                    structure that represents one token.
                 </p>
 
             </section>
 
 
+            <!-- Types -->
+            <section id="types">
+
+                <h2>Types</h2>
+
+                <p>
+                    The names below are placeholders: rename them and change
+                    the members so they match your own header.
+                </p>
+
+                <table class="ref">
+
+                    <tr class="ref-file">
+                        <td colspan="2">Defined in header <code>lexer.h</code></td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name">TokenType</td>
+                        <td>
+                            enumeration of every kind of token
+                            <span class="ref-kind">(enum)</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name"><a href="#Token">Token</a></td>
+                        <td>
+                            one token: its type, its lexeme and its position
+                            <span class="ref-kind">(struct, typedef)</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name">Lexer</td>
+                        <td>
+                            state of the scanner: source text and current position
+                            <span class="ref-kind">(struct, typedef)</span>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+                <!-- Worked example: copy this block for each type -->
+                <div class="ref-entry" id="Token">
+
+                    <h4>Token</h4>
+
+<pre><code>#include &lt;stddef.h&gt;
+
+typedef struct {
+    TokenType type;
+    const char *start;
+    size_t length;
+    int line;
+    int column;
+} Token;</code></pre>
+
+                    <p>
+                        Represents a single token found in the source text.
+                    </p>
+
+                    <h5>Members</h5>
+
+                    <dl>
+                        <dt>type</dt>
+                        <dd>The kind of token (see <code>TokenType</code>).</dd>
+
+                        <dt>start</dt>
+                        <dd>Pointer to the first character of the lexeme inside the source text. The text is not copied.</dd>
+
+                        <dt>length</dt>
+                        <dd>Number of characters in the lexeme.</dd>
+
+                        <dt>line, column</dt>
+                        <dd>Position of the first character, counting from 1.</dd>
+                    </dl>
+
+                    <h5>Notes</h5>
+
+                    <p>
+                        Because <code>start</code> points into the source
+                        text, the source must stay alive for as long as its
+                        tokens are used.
+                    </p>
+
+                    <h5>Example</h5>
+
+<pre><code>Token token = {
+    .type = TOKEN_IDENTIFIER,
+    .start = "count = 1;",
+    .length = 5,
+    .line = 1,
+    .column = 1
+};
+
+printf("%.*s\n", (int) token.length, token.start);</code></pre>
+
+<pre class="ref-output"><code>count</code></pre>
+
+                </div>
+
+            </section>
+
+
+            <!-- Functions -->
+            <section id="functions">
+
+                <h2>Functions</h2>
+
+                <table class="ref">
+
+                    <tr class="ref-file">
+                        <td colspan="2">Defined in header <code>lexer.h</code></td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name"><a href="#lexer_init">lexer_init</a></td>
+                        <td>
+                            prepares a lexer to scan a source text
+                            <span class="ref-kind">(function)</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name"><a href="#lexer_next_token">lexer_next_token</a></td>
+                        <td>
+                            scans and returns the next token
+                            <span class="ref-kind">(function)</span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="ref-name">token_type_name</td>
+                        <td>
+                            returns the name of a token type as a string
+                            <span class="ref-kind">(function)</span>
+                        </td>
+                    </tr>
+
+                </table>
+
+
+                <!-- Worked example: copy this block for each function -->
+                <div class="ref-entry" id="lexer_init">
+
+                    <h4>lexer_init</h4>
+
+<pre><code>void lexer_init(Lexer *lexer, const char *source);</code></pre>
+
+                    <p>
+                        Prepares <code>lexer</code> to scan
+                        <code>source</code>, starting at line 1, column 1.
+                    </p>
+
+                    <h5>Parameters</h5>
+
+                    <dl>
+                        <dt>lexer</dt>
+                        <dd>Pointer to the lexer to initialize.</dd>
+
+                        <dt>source</dt>
+                        <dd>Null-terminated source text. It is not copied, so it must outlive the lexer.</dd>
+                    </dl>
+
+                </div>
+
+
+                <div class="ref-entry" id="lexer_next_token">
+
+                    <h4>lexer_next_token</h4>
+
+<pre><code>Token lexer_next_token(Lexer *lexer);</code></pre>
+
+                    <p>
+                        Skips whitespace and comments, scans the next token
+                        and returns it. Once the end of the source is
+                        reached, every call returns a token of type
+                        <code>TOKEN_EOF</code>.
+                    </p>
+
+                    <h5>Parameters</h5>
+
+                    <dl>
+                        <dt>lexer</dt>
+                        <dd>Lexer previously prepared with <code>lexer_init</code>.</dd>
+                    </dl>
+
+                    <h5>Return value</h5>
+
+                    <p>
+                        The next token. An unknown character produces a
+                        token of type <code>TOKEN_ERROR</code> instead of
+                        stopping the lexer.
+                    </p>
+
+                    <h5>Example</h5>
+
+<pre><code>Lexer lexer;
+lexer_init(&amp;lexer, "int x = 3 + 5;");
+
+Token token;
+
+do {
+    token = lexer_next_token(&amp;lexer);
+
+    printf("%d:%-3d %-11s %.*s\n",
+           token.line, token.column,
+           token_type_name(token.type),
+           (int) token.length, token.start);
+} while (token.type != TOKEN_EOF);</code></pre>
+
+<pre class="ref-output"><code>1:1   KEYWORD     int
+1:5   IDENTIFIER  x
+1:7   OPERATOR    =
+1:9   NUMBER      3
+1:11  OPERATOR    +
+1:13  NUMBER      5
+1:14  PUNCT       ;
+1:15  EOF</code></pre>
+
+                </div>
+
+            </section>
+
 
             <!-- Implementation -->
-
             <section id="implementation">
 
                 <h2>Implementation</h2>
@@ -266,14 +538,12 @@
                     How the lexer works in code.
                 </p>
 
-                <pre><code>/* code here */</code></pre>
+<pre><code>/* code here */</code></pre>
 
             </section>
 
 
-
             <!-- Examples -->
-
             <section id="examples">
 
                 <h2>Examples</h2>
@@ -285,37 +555,25 @@
             </section>
 
 
-
             <!-- Problems -->
-
             <section id="problems">
 
                 <h2>Problems</h2>
 
                 <ul>
-
-                    <li>
-                        --
-                    </li>
-
+                    <li>--</li>
                 </ul>
 
             </section>
 
 
-
             <!-- References -->
-
             <section id="references">
 
                 <h2>References</h2>
 
                 <ul>
-
-                    <li>
-                        --
-                    </li>
-
+                    <li>--</li>
                 </ul>
 
             </section>
