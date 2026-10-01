@@ -320,7 +320,7 @@
                     </tr>
 
                     <tr>
-                        <td class="ref-name">TokenType</td>
+                        <td class="ref-name"><a href="#TokenType">TokenType</a></td>
                         <td>
                             enumeration of every kind of token
                             <span class="ref-kind">(enum)</span>
@@ -345,19 +345,63 @@
 
                 </table>
 
-                <!-- Worked example: copy this block for each type -->
+                <!-- TokenType -->
+                <div class="ref-entry" id="TokenType">
+
+                    <h4>TokenType</h4>
+
+                    <pre><code>typedef enum {
+    TOK_LPAREN,
+    TOK_RPAREN,
+    TOK_LBRACE,
+    ...
+    TOK_INVALID_CHAR,
+} TokenType;
+                    </code></pre>
+
+                    <p>Enumerator for all the available tokens</p>
+
+
+                    <h5>Example</h5>
+
+                    <pre><code>
+TokenType type = TOK_CHAR;
+
+if (type == TOK_CHAR) {
+    printf("it is a char token\n");
+} else {
+    printf("it is not a char token\n");
+}
+                    </code></pre>
+
+                </div>
+                <!-- end for TokenType -->
+
+                <!-- Token -->
                 <div class="ref-entry" id="Token">
 
                     <h4>Token</h4>
+                    <h5>Macros</h5>
+
+                    <pre>
+                        <code>
+#define TOKEN_BUF_MAX_CAP 255</code>
+                    </pre>
+
+                    <dl>
+                        <dt>TOKEN_BUF_MAX_CAP</dt>
+                        <dd>Represents the maximun capacity that every
+                            word can have
+                        </dd>
+                    </dl>
 
                     <pre><code>#include &lt;stddef.h&gt;
-                        typedef struct {
-                            TokenType type;
-                            const char *start;
-                            size_t length;
-                            int line;
-                            int column;
-                        } Token;
+typedef struct {
+    TokenType type;
+    char value[TOKEN_BUF_MAX_CAP];
+    int line;
+    int column;
+} Token;
                     </code></pre>
 
                     <p>Represents a single token found in the source text.</p>
@@ -366,13 +410,10 @@
 
                     <dl>
                         <dt>type</dt>
-                        <dd>The kind of token (see <code>TokenType</code>).</dd>
+                        <dd>The kind of token (see <code> <a href="#TokenType">TokenType</a></code>).</dd>
 
-                        <dt>start</dt>
-                        <dd>Pointer to the first character of the lexeme inside the source text. The text is not copied.</dd>
-
-                        <dt>length</dt>
-                        <dd>Number of characters in the lexeme.</dd>
+                        <dt>Value</dt>
+                        <dd>Lexeme of the current token in source code</dd>
 
                         <dt>line, column</dt>
                         <dd>Position of the first character, counting from 1.</dd>
@@ -381,28 +422,27 @@
                     <h5>Notes</h5>
 
                     <p>
-                        Because <code>start</code> points into the source
-                        text, the source must stay alive for as long as its
-                        tokens are used.
+                        No item can be longer than <code>TOKEN_BUF_MAX_CAP</code>
+                        otherwise you will have overflow errors
                     </p>
 
                     <h5>Example</h5>
 
                     <pre><code>
-                        Token token = {
-                        .type = TOKEN_IDENTIFIER,
-                        .start = "count = 1;",
-                        .length = 5,
-                        .line = 1,
-                        .column = 1
-                        };
+Token token = {
+    .type = TOKEN_IDENTIFIER,
+    .line = 1,
+    .column = 1
+};
 
-                        printf("%.*s\n", (int) token.length, token.start);
+strcpy(token.value, "count = 1;");
+
+printf("%.*s\n", (int) token.length, token.value);
                     </code></pre>
 
-                    <pre class="ref-output"><code>count</code></pre>
-
                 </div>
+                <!-- end for token -->
+
 
             </section>
 
@@ -412,121 +452,164 @@
 
                 <h2>Functions</h2>
 
-                <table class="ref">
+                    <table class="ref">
 
-                    <tr class="ref-file">
-                        <td colspan="2">Defined in header <code>lexer.h</code></td>
-                    </tr>
+                        <tr class="ref-file">
+                            <td colspan="2">Defined in header <code>token.h</code></td>
+                        </tr>
 
-                    <tr>
-                        <td class="ref-name"><a href="#lexer_init">lexer_init</a></td>
-                        <td>
-                            prepares a lexer to scan a source text
-                            <span class="ref-kind">(function)</span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="ref-name"><a href="#token_init">token_init</a></td>
+                            <td>
+                                sets the values of a token and classifies its type
+                                <span class="ref-kind">(function)</span>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td class="ref-name"><a href="#lexer_next_token">lexer_next_token</a></td>
-                        <td>
-                            scans and returns the next token
-                            <span class="ref-kind">(function)</span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="ref-name"><a href="#token_init_type">token_init_type</a></td>
+                            <td>
+                                sets the values of a token with a type given by the caller
+                                <span class="ref-kind">(function)</span>
+                            </td>
+                        </tr>
 
-                    <tr>
-                        <td class="ref-name">token_type_name</td>
-                        <td>
-                            returns the name of a token type as a string
-                            <span class="ref-kind">(function)</span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="ref-name"><a href="#token_println">token_println</a></td>
+                            <td>
+                                prints the members of a token
+                                <span class="ref-kind">(function)</span>
+                            </td>
+                        </tr>
 
-                </table>
-
-
-                <!-- Worked example: copy this block for each function -->
-                <div class="ref-entry" id="lexer_init">
-
-                    <h4>lexer_init</h4>
-
-<pre><code>void lexer_init(Lexer *lexer, const char *source);</code></pre>
-
-                    <p>
-                        Prepares <code>lexer</code> to scan
-                        <code>source</code>, starting at line 1, column 1.
-                    </p>
-
-                    <h5>Parameters</h5>
-
-                    <dl>
-                        <dt>lexer</dt>
-                        <dd>Pointer to the lexer to initialize.</dd>
-
-                        <dt>source</dt>
-                        <dd>Null-terminated source text. It is not copied, so it must outlive the lexer.</dd>
-                    </dl>
-
-                </div>
+                    </table>
 
 
-                <div class="ref-entry" id="lexer_next_token">
+                    <!-- token_init -->
+                    <div class="ref-entry" id="token_init">
 
-                    <h4>lexer_next_token</h4>
+                        <h4>token_init</h4>
 
-<pre><code>Token lexer_next_token(Lexer *lexer);</code></pre>
+<pre><code>void token_init(Token *t, const StrBuf *word, const int line, const int col);</code></pre>
 
-                    <p>
-                        Skips whitespace and comments, scans the next token
-                        and returns it. Once the end of the source is
-                        reached, every call returns a token of type
-                        <code>TOKEN_EOF</code>.
-                    </p>
+                        <p>
+                            Sets the values of the token <code>t</code>. It
+                            determines which type the token has by
+                            classifying the resulting lexeme.
+                        </p>
 
-                    <h5>Parameters</h5>
+                        <h5>Parameters</h5>
 
-                    <dl>
-                        <dt>lexer</dt>
-                        <dd>Lexer previously prepared with <code>lexer_init</code>.</dd>
-                    </dl>
+                        <dl>
+                            <dt>t</dt>
+                            <dd>Pointer to a stack allocated <a href="#Token"><code>Token</code></a>.</dd>
 
-                    <h5>Return value</h5>
+                            <dt>word</dt>
+                            <dd>String buffer storing the word being tokenized.</dd>
 
-                    <p>
-                        The next token. An unknown character produces a
-                        token of type <code>TOKEN_ERROR</code> instead of
-                        stopping the lexer.
-                    </p>
+                            <dt>line</dt>
+                            <dd>Line where the token was found.</dd>
 
-                    <h5>Example</h5>
+                            <dt>col</dt>
+                            <dd>Column where the token was found.</dd>
+                        </dl>
 
-<pre><code>Lexer lexer;
-lexer_init(&amp;lexer, "int x = 3 + 5;");
+                        <h5>Notes</h5>
+
+                        <p>
+                            The word must not be longer than
+                            <code>TOKEN_BUF_MAX_CAP</code> (see above).
+                        </p>
+
+                        <h5>Example</h5>
+
+<pre><code>StrBuf word;
+/* ... word now holds "while" ... */
 
 Token token;
+token_init(&amp;token, &amp;word, 3, 5);
 
-do {
-    token = lexer_next_token(&amp;lexer);
+/* token.type is now the keyword type, at line 3, column 5 */</code></pre>
 
-    printf("%d:%-3d %-11s %.*s\n",
-           token.line, token.column,
-           token_type_name(token.type),
-           (int) token.length, token.start);
-} while (token.type != TOKEN_EOF);</code></pre>
+                    </div>
+                    <!-- end for token_init -->
 
-<pre class="ref-output"><code>1:1   KEYWORD     int
-1:5   IDENTIFIER  x
-1:7   OPERATOR    =
-1:9   NUMBER      3
-1:11  OPERATOR    +
-1:13  NUMBER      5
-1:14  PUNCT       ;
-1:15  EOF</code></pre>
 
-                </div>
+                    <!-- token_init_type -->
+                    <div class="ref-entry" id="token_init_type">
+
+                        <h4>token_init_type</h4>
+
+<pre><code>void token_init_type(Token *t, TokenType tok_type, const StrBuf *word,
+                     const int line, const int col);</code></pre>
+
+                        <p>
+                            Sets the values of the token <code>t</code> and
+                            sets its type to the value given by the caller,
+                            without classifying the word.
+                        </p>
+
+                        <h5>Parameters</h5>
+
+                        <dl>
+                            <dt>t</dt>
+                            <dd>Pointer to the <a href="#Token"><code>Token</code></a> to fill in.</dd>
+
+                            <dt>tok_type</dt>
+                            <dd>The <a href="#TokenType"><code>TokenType</code></a> to store in the token.</dd>
+
+                            <dt>word</dt>
+                            <dd>String buffer storing the word being tokenized.</dd>
+
+                            <dt>line</dt>
+                            <dd>Line where the token was found.</dd>
+
+                            <dt>col</dt>
+                            <dd>Column where the token was found.</dd>
+                        </dl>
+
+                        <h5>Example</h5>
+
+<pre><code>StrBuf word;
+/* ... word now holds "(" ... */
+
+Token token;
+token_init_type(&amp;token, TOK_LPAREN, &amp;word, 1, 1);</code></pre>
+
+                    </div>
+                    <!-- end for token_init_type -->
+
+
+                    <!-- token_println -->
+                    <div class="ref-entry" id="token_println">
+
+                        <h4>token_println</h4>
+
+<pre><code>void token_println(const Token *t);</code></pre>
+
+                        <p>
+                            Prints the members of the token <code>t</code>.
+                        </p>
+
+                        <h5>Parameters</h5>
+
+                        <dl>
+                            <dt>t</dt>
+                            <dd>Pointer to the <a href="#Token"><code>Token</code></a> to print.</dd>
+                        </dl>
+
+                        <h5>Example</h5>
+
+<pre><code>Token token;
+token_init_type(&amp;token, TOK_LPAREN, &amp;word, 1, 1);
+
+token_println(&amp;token);</code></pre>
+
+                    </div>
+                    <!-- end for token_println -->
 
             </section>
-
+            <!--End of functions -->
 
             <!-- Implementation -->
             <section id="implementation">
