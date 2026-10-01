@@ -345,25 +345,22 @@
 
                 </table>
 
-
                 <!-- Worked example: copy this block for each type -->
                 <div class="ref-entry" id="Token">
 
                     <h4>Token</h4>
 
-<pre><code>#include &lt;stddef.h&gt;
+                    <pre><code>#include &lt;stddef.h&gt;
+                        typedef struct {
+                            TokenType type;
+                            const char *start;
+                            size_t length;
+                            int line;
+                            int column;
+                        } Token;
+                    </code></pre>
 
-typedef struct {
-    TokenType type;
-    const char *start;
-    size_t length;
-    int line;
-    int column;
-} Token;</code></pre>
-
-                    <p>
-                        Represents a single token found in the source text.
-                    </p>
+                    <p>Represents a single token found in the source text.</p>
 
                     <h5>Members</h5>
 
@@ -391,17 +388,19 @@ typedef struct {
 
                     <h5>Example</h5>
 
-<pre><code>Token token = {
-    .type = TOKEN_IDENTIFIER,
-    .start = "count = 1;",
-    .length = 5,
-    .line = 1,
-    .column = 1
-};
+                    <pre><code>
+                        Token token = {
+                        .type = TOKEN_IDENTIFIER,
+                        .start = "count = 1;",
+                        .length = 5,
+                        .line = 1,
+                        .column = 1
+                        };
 
-printf("%.*s\n", (int) token.length, token.start);</code></pre>
+                        printf("%.*s\n", (int) token.length, token.start);
+                    </code></pre>
 
-<pre class="ref-output"><code>count</code></pre>
+                    <pre class="ref-output"><code>count</code></pre>
 
                 </div>
 
