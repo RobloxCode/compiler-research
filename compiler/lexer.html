@@ -255,8 +255,11 @@
                 <h2>Token types</h2>
 
                 <p>
-                    Replace these rows with the exact token types of your
-                    lexer.
+                    The lexer recognizes 102 token types, grouped into
+                    delimiters, operators, literals, keywords (C89 and
+                    C99/C11) and a few special tokens for end of input and
+                    errors. See the
+                    <a href="token_types.html">full list of token types</a>.
                 </p>
 
                 <table>
@@ -398,7 +401,7 @@ if (type == TOK_CHAR) {
                     <pre><code>#include &lt;stddef.h&gt;
 typedef struct {
     TokenType type;
-    char value[TOKEN_BUF_MAX_CAP];
+    char lexeme[TOKEN_BUF_MAX_CAP];
     int line;
     int column;
 } Token;
@@ -412,7 +415,7 @@ typedef struct {
                         <dt>type</dt>
                         <dd>The kind of token (see <code> <a href="#TokenType">TokenType</a></code>).</dd>
 
-                        <dt>Value</dt>
+                        <dt>lexeme</dt>
                         <dd>Lexeme of the current token in source code</dd>
 
                         <dt>line, column</dt>
@@ -540,7 +543,7 @@ token_init(&amp;token, &amp;word, 3, 5);
 
                         <h4>token_init_type</h4>
 
-<pre><code>void token_init_type(Token *t, TokenType tok_type, const StrBuf *word,
+<pre><code>void token_init_type(Token *t, TokenType type, const StrBuf *word,
                      const int line, const int col);</code></pre>
 
                         <p>
@@ -555,7 +558,7 @@ token_init(&amp;token, &amp;word, 3, 5);
                             <dt>t</dt>
                             <dd>Pointer to the <a href="#Token"><code>Token</code></a> to fill in.</dd>
 
-                            <dt>tok_type</dt>
+                            <dt>type</dt>
                             <dd>The <a href="#TokenType"><code>TokenType</code></a> to store in the token.</dd>
 
                             <dt>word</dt>

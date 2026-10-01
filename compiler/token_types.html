@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Token types - Compiler Research</title>
+
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../reference.css">
+</head>
+
+<body>
+
+<div class="page">
+
+    <header>
+
+        <div class="header-top">
+
+            <h1>Compiler Research</h1>
+
+        </div>
+
+        <nav>
+            <a href="../index.html#home">Home</a>
+        </nav>
+
+    </header>
+
+
+    <div class="layout">
+
+        <aside>
+
+            <h3>Contents</h3>
+
+            <ul>
+
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#delimiters">Delimiters</a></li>
+                <li><a href="#operators">Operators</a></li>
+                <li><a href="#literals">Identifiers and literals</a></li>
+                <li><a href="#keywords">Keywords</a></li>
+                <li><a href="#keywords-c99">C99/C11 keywords</a></li>
+                <li><a href="#special">Special tokens</a></li>
+
+            </ul>
+
+
+            <h3>Navigation</h3>
+
+            <ul>
+
+                <li><a href="lexer.html">&larr; Back to Lexer</a></li>
+
+                <li><a href="../index.html#compiler">&larr; Back to Compiler</a></li>
+
+            </ul>
+
+        </aside>
+
+
+        <main>
+
+            <section id="overview">
+
+                <h2>Token types</h2>
+
+                <p>
+                    All the values of <a href="lexer.html#TokenType"><code>TokenType</code></a>
+                    (102 in total), grouped by category. Each token
+                    stores its lexeme in <code>Token.value</code>, so the
+                    lexeme column below is only an example of the text that
+                    produces it.
+                </p>
+
+            </section>
+
+
+            <section id="delimiters">
+
+                <h2>Delimiters (10)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th><th>Description</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_LPAREN</code></td><td><code>(</code></td><td>Opens a parenthesized group or argument list</td></tr>
+                        <tr><td><code>TOK_RPAREN</code></td><td><code>)</code></td><td>Closes a parenthesized group</td></tr>
+                        <tr><td><code>TOK_LBRACE</code></td><td><code>{</code></td><td>Opens a block</td></tr>
+                        <tr><td><code>TOK_RBRACE</code></td><td><code>}</code></td><td>Closes a block</td></tr>
+                        <tr><td><code>TOK_LBRACKET</code></td><td><code>[</code></td><td>Opens an index or array declarator</td></tr>
+                        <tr><td><code>TOK_RBRACKET</code></td><td><code>]</code></td><td>Closes an index</td></tr>
+                        <tr><td><code>TOK_COMMA</code></td><td><code>,</code></td><td>Separates arguments and declarators</td></tr>
+                        <tr><td><code>TOK_DOT</code></td><td><code>.</code></td><td>Member access</td></tr>
+                        <tr><td><code>TOK_COLON</code></td><td><code>:</code></td><td>Labels, <code>case</code>, bit-fields</td></tr>
+                        <tr><td><code>TOK_SEMICOLON</code></td><td><code>;</code></td><td>Ends a statement</td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+            <section id="operators">
+
+                <h2>Operators (33)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th><th>Description</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_PLUS</code></td><td><code>+</code></td><td>Addition, unary plus</td></tr>
+                        <tr><td><code>TOK_MINUS</code></td><td><code>-</code></td><td>Subtraction, negation</td></tr>
+                        <tr><td><code>TOK_STAR</code></td><td><code>*</code></td><td>Multiplication, pointer declarator, dereference</td></tr>
+                        <tr><td><code>TOK_SLASH</code></td><td><code>/</code></td><td>Division</td></tr>
+                        <tr><td><code>TOK_MODULO</code></td><td><code>%</code></td><td>Remainder</td></tr>
+                        <tr><td><code>TOK_ASSIGN</code></td><td><code>=</code></td><td>Assignment</td></tr>
+                        <tr><td><code>TOK_ADD_ASSIGN</code></td><td><code>+=</code></td><td>Add and assign</td></tr>
+                        <tr><td><code>TOK_SUB_ASSIGN</code></td><td><code>-=</code></td><td>Subtract and assign</td></tr>
+                        <tr><td><code>TOK_MUL_ASSIGN</code></td><td><code>*=</code></td><td>Multiply and assign</td></tr>
+                        <tr><td><code>TOK_DIV_ASSIGN</code></td><td><code>/=</code></td><td>Divide and assign</td></tr>
+                        <tr><td><code>TOK_MOD_ASSIGN</code></td><td><code>%=</code></td><td>Remainder and assign</td></tr>
+                        <tr><td><code>TOK_BIT_AND_ASSIGN</code></td><td><code>&amp;=</code></td><td>Bitwise AND and assign</td></tr>
+                        <tr><td><code>TOK_BIT_OR_ASSIGN</code></td><td><code>|=</code></td><td>Bitwise OR and assign</td></tr>
+                        <tr><td><code>TOK_BIT_XOR_ASSIGN</code></td><td><code>^=</code></td><td>Bitwise XOR and assign</td></tr>
+                        <tr><td><code>TOK_LSHIFT_ASSIGN</code></td><td><code>&lt;&lt;=</code></td><td>Shift left and assign</td></tr>
+                        <tr><td><code>TOK_RSHIFT_ASSIGN</code></td><td><code>&gt;&gt;=</code></td><td>Shift right and assign</td></tr>
+                        <tr><td><code>TOK_LSHIFT</code></td><td><code>&lt;&lt;</code></td><td>Shift left</td></tr>
+                        <tr><td><code>TOK_RSHIFT</code></td><td><code>&gt;&gt;</code></td><td>Shift right</td></tr>
+                        <tr><td><code>TOK_BIT_AND</code></td><td><code>&amp;</code></td><td>Bitwise AND, address-of</td></tr>
+                        <tr><td><code>TOK_BIT_OR</code></td><td><code>|</code></td><td>Bitwise OR</td></tr>
+                        <tr><td><code>TOK_BIT_NOT</code></td><td><code>~</code></td><td>Bitwise NOT</td></tr>
+                        <tr><td><code>TOK_BIT_XOR</code></td><td><code>^</code></td><td>Bitwise XOR</td></tr>
+                        <tr><td><code>TOK_AND</code></td><td><code>&amp;&amp;</code></td><td>Logical AND</td></tr>
+                        <tr><td><code>TOK_OR</code></td><td><code>||</code></td><td>Logical OR</td></tr>
+                        <tr><td><code>TOK_NOT</code></td><td><code>!</code></td><td>Logical NOT</td></tr>
+                        <tr><td><code>TOK_EQ</code></td><td><code>==</code></td><td>Equal to</td></tr>
+                        <tr><td><code>TOK_NOT_EQ</code></td><td><code>!=</code></td><td>Not equal to</td></tr>
+                        <tr><td><code>TOK_LESS</code></td><td><code>&lt;</code></td><td>Less than</td></tr>
+                        <tr><td><code>TOK_GREATER</code></td><td><code>&gt;</code></td><td>Greater than</td></tr>
+                        <tr><td><code>TOK_LESS_EQ</code></td><td><code>&lt;=</code></td><td>Less than or equal to</td></tr>
+                        <tr><td><code>TOK_GREATER_EQ</code></td><td><code>&gt;=</code></td><td>Greater than or equal to</td></tr>
+                        <tr><td><code>TOK_INCREMENT</code></td><td><code>++</code></td><td>Increment</td></tr>
+                        <tr><td><code>TOK_DECREMENT</code></td><td><code>--</code></td><td>Decrement</td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+            <section id="literals">
+
+                <h2>Identifiers and literals (5)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th><th>Description</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_IDENTIFIER</code></td><td><code>count</code></td><td>Name of a variable, function or type</td></tr>
+                        <tr><td><code>TOK_INTEGER</code></td><td><code>42</code></td><td>Integer literal</td></tr>
+                        <tr><td><code>TOK_FLOAT</code></td><td><code>3.14</code></td><td>Floating-point literal</td></tr>
+                        <tr><td><code>TOK_CHAR</code></td><td><code>&#x27;a&#x27;</code></td><td>Character literal</td></tr>
+                        <tr><td><code>TOK_STRING</code></td><td><code>&quot;text&quot;</code></td><td>String literal</td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+            <section id="keywords">
+
+                <h2>Keywords (34)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_KW_AUTO</code></td><td><code>auto</code></td></tr>
+                        <tr><td><code>TOK_KW_BREAK</code></td><td><code>break</code></td></tr>
+                        <tr><td><code>TOK_KW_CASE</code></td><td><code>case</code></td></tr>
+                        <tr><td><code>TOK_KW_CHAR</code></td><td><code>char</code></td></tr>
+                        <tr><td><code>TOK_KW_CONST</code></td><td><code>const</code></td></tr>
+                        <tr><td><code>TOK_KW_CONTINUE</code></td><td><code>continue</code></td></tr>
+                        <tr><td><code>TOK_KW_DEFAULT</code></td><td><code>default</code></td></tr>
+                        <tr><td><code>TOK_KW_DO</code></td><td><code>do</code></td></tr>
+                        <tr><td><code>TOK_KW_DOUBLE</code></td><td><code>double</code></td></tr>
+                        <tr><td><code>TOK_KW_ELSE</code></td><td><code>else</code></td></tr>
+                        <tr><td><code>TOK_KW_ENUM</code></td><td><code>enum</code></td></tr>
+                        <tr><td><code>TOK_KW_EXTERN</code></td><td><code>extern</code></td></tr>
+                        <tr><td><code>TOK_KW_FLOAT</code></td><td><code>float</code></td></tr>
+                        <tr><td><code>TOK_KW_FOR</code></td><td><code>for</code></td></tr>
+                        <tr><td><code>TOK_KW_GOTO</code></td><td><code>goto</code></td></tr>
+                        <tr><td><code>TOK_KW_IF</code></td><td><code>if</code></td></tr>
+                        <tr><td><code>TOK_KW_INLINE</code></td><td><code>inline</code></td></tr>
+                        <tr><td><code>TOK_KW_INT</code></td><td><code>int</code></td></tr>
+                        <tr><td><code>TOK_KW_LONG</code></td><td><code>long</code></td></tr>
+                        <tr><td><code>TOK_KW_REGISTER</code></td><td><code>register</code></td></tr>
+                        <tr><td><code>TOK_KW_RESTRICT</code></td><td><code>restrict</code></td></tr>
+                        <tr><td><code>TOK_KW_RETURN</code></td><td><code>return</code></td></tr>
+                        <tr><td><code>TOK_KW_SHORT</code></td><td><code>short</code></td></tr>
+                        <tr><td><code>TOK_KW_SIGNED</code></td><td><code>signed</code></td></tr>
+                        <tr><td><code>TOK_KW_SIZEOF</code></td><td><code>sizeof</code></td></tr>
+                        <tr><td><code>TOK_KW_STATIC</code></td><td><code>static</code></td></tr>
+                        <tr><td><code>TOK_KW_STRUCT</code></td><td><code>struct</code></td></tr>
+                        <tr><td><code>TOK_KW_SWITCH</code></td><td><code>switch</code></td></tr>
+                        <tr><td><code>TOK_KW_TYPEDEF</code></td><td><code>typedef</code></td></tr>
+                        <tr><td><code>TOK_KW_UNION</code></td><td><code>union</code></td></tr>
+                        <tr><td><code>TOK_KW_UNSIGNED</code></td><td><code>unsigned</code></td></tr>
+                        <tr><td><code>TOK_KW_VOID</code></td><td><code>void</code></td></tr>
+                        <tr><td><code>TOK_KW_VOLATILE</code></td><td><code>volatile</code></td></tr>
+                        <tr><td><code>TOK_KW_WHILE</code></td><td><code>while</code></td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+            <section id="keywords-c99">
+
+                <h2>C99/C11 keywords (10)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_KW_BOOL</code></td><td><code>_Bool</code></td></tr>
+                        <tr><td><code>TOK_KW_COMPLEX</code></td><td><code>_Complex</code></td></tr>
+                        <tr><td><code>TOK_KW_IMAGINARY</code></td><td><code>_Imaginary</code></td></tr>
+                        <tr><td><code>TOK_KW_ALIGNAS</code></td><td><code>_Alignas</code></td></tr>
+                        <tr><td><code>TOK_KW_ALIGNOF</code></td><td><code>_Alignof</code></td></tr>
+                        <tr><td><code>TOK_KW_ATOMIC</code></td><td><code>_Atomic</code></td></tr>
+                        <tr><td><code>TOK_KW_GENERIC</code></td><td><code>_Generic</code></td></tr>
+                        <tr><td><code>TOK_KW_NORETURN</code></td><td><code>_Noreturn</code></td></tr>
+                        <tr><td><code>TOK_KW_STATIC_ASSERT</code></td><td><code>_Static_assert</code></td></tr>
+                        <tr><td><code>TOK_KW_THREAD_LOCAL</code></td><td><code>_Thread_local</code></td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+            <section id="special">
+
+                <h2>Special tokens (10)</h2>
+
+                <table>
+
+                    <thead>
+                        <tr><th>Token</th><th>Lexeme</th><th>Description</th></tr>
+                    </thead>
+
+                    <tbody>
+                        <tr><td><code>TOK_EOF</code></td><td><code>(end of input)</code></td><td>Always the last token</td></tr>
+                        <tr><td><code>TOK_INVALID</code></td><td><code>--</code></td><td>TODO: describe</td></tr>
+                        <tr><td><code>TOK_BANG</code></td><td><code>!</code></td><td>TODO: how does it differ from <code>TOK_NOT</code>?</td></tr>
+                        <tr><td><code>TOK_NUMBER</code></td><td><code>--</code></td><td>TODO: how does it differ from <code>TOK_INTEGER</code> / <code>TOK_FLOAT</code>?</td></tr>
+                        <tr><td><code>TOK_INVALID_NUMBER</code></td><td><code>12abc</code></td><td>Malformed number (guess, check)</td></tr>
+                        <tr><td><code>TOK_ARROW</code></td><td><code>-&gt;</code></td><td>Member access through a pointer</td></tr>
+                        <tr><td><code>TOK_HASH</code></td><td><code>#</code></td><td>Preprocessor directive</td></tr>
+                        <tr><td><code>TOK_CONDITIONAL</code></td><td><code>?</code></td><td>Conditional (ternary) operator</td></tr>
+                        <tr><td><code>TOK_INVALID_STR</code></td><td><code>&quot;abc</code></td><td>Unterminated string literal (guess, check)</td></tr>
+                        <tr><td><code>TOK_INVALID_CHAR</code></td><td><code>&#x27;ab</code></td><td>Malformed character literal (guess, check)</td></tr>
+                    </tbody>
+
+                </table>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+    <footer>
+
+        <p>
+            Compiler Research ·
+            Last updated: 30 September 2026
+        </p>
+
+    </footer>
+
+</div>
+
+</body>
+
+</html>
