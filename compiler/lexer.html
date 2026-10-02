@@ -339,7 +339,7 @@
                     </tr>
 
                     <tr>
-                        <td class="ref-name">Lexer</td>
+                        <td class="ref-name"><a href="#Lexer">Lexer</a></td>
                         <td>
                             state of the scanner: source text and current position
                             <span class="ref-kind">(struct, typedef)</span>
@@ -613,6 +613,73 @@ token_println(&amp;token);</code></pre>
 
             </section>
             <!--End of functions -->
+
+            <!-- Lexer -->
+            <div class="ref-entry" id="Lexer">
+
+                <h4>Lexer</h4>
+                <h5>Macros</h5>
+
+                <pre>
+                    <code>
+#define TOKEN_BUF_MAX_CAP 255</code>
+                </pre>
+
+                <dl>
+                    <dt>TOKEN_BUF_MAX_CAP</dt>
+                    <dd>Represents the maximun capacity that every
+                        word can have
+                    </dd>
+                </dl>
+
+                <pre><code>#include &lt;stddef.h&gt;
+typedef struct {
+TokenType type;
+char lexeme[TOKEN_BUF_MAX_CAP];
+int line;
+int column;
+} Token;
+                </code></pre>
+
+                <p>Represents a single token found in the source text.</p>
+
+                <h5>Members</h5>
+
+                <dl>
+                    <dt>type</dt>
+                    <dd>The kind of token (see <code> <a href="#TokenType">TokenType</a></code>).</dd>
+
+                    <dt>lexeme</dt>
+                    <dd>Lexeme of the current token in source code</dd>
+
+                    <dt>line, column</dt>
+                    <dd>Position of the first character, counting from 1.</dd>
+                </dl>
+
+                <h5>Notes</h5>
+
+                <p>
+                    No item can be longer than <code>TOKEN_BUF_MAX_CAP</code>
+                    otherwise you will have overflow errors
+                </p>
+
+                <h5>Example</h5>
+
+                <pre><code>
+Token token = {
+.type = TOKEN_IDENTIFIER,
+.line = 1,
+.column = 1
+};
+
+strcpy(token.value, "count = 1;");
+
+printf("%.*s\n", (int) token.length, token.value);
+                </code></pre>
+
+            </div>
+            <!-- end for lexer -->
+
 
             <!-- Implementation -->
             <section id="implementation">
