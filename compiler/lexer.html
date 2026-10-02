@@ -398,7 +398,7 @@ if (type == TOK_CHAR) {
                         </dd>
                     </dl>
 
-                    <pre><code>#include &lt;stddef.h&gt;
+                    <pre><code>
 typedef struct {
     TokenType type;
     char lexeme[TOKEN_BUF_MAX_CAP];
@@ -622,23 +622,36 @@ token_println(&amp;token);</code></pre>
 
                 <pre>
                     <code>
-#define TOKEN_BUF_MAX_CAP 255</code>
+#define INIT_TOKEN_CAP 30</code>
                 </pre>
 
                 <dl>
-                    <dt>TOKEN_BUF_MAX_CAP</dt>
-                    <dd>Represents the maximun capacity that every
-                        word can have
+                    <dt>INIT_TOKEN_CAP</dt>
+                    <dd>Represents the minimun capacity that an
+                        array of tokens can have
                     </dd>
                 </dl>
 
-                <pre><code>#include &lt;stddef.h&gt;
+                <pre><code>
 typedef struct {
-TokenType type;
-char lexeme[TOKEN_BUF_MAX_CAP];
-int line;
-int column;
-} Token;
+    FILE *file;
+
+    int cur;
+    int peek;
+    int peek2;
+
+    int cur_line;
+    int cur_col;
+
+    int tok_start_line;
+    int tok_start_col;
+
+    StrBuf cur_word;
+
+    bool overflow;
+
+    TokenArr *tokens;
+} Lexer;
                 </code></pre>
 
                 <p>Represents a single token found in the source text.</p>
