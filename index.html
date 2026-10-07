@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="description" content="Documentation of a didactic x86-64 compiler and thesis research on the impact of classic compiler optimizations compared with GCC and LLVM.">
+    <meta name="author" content="Miguel Angel Loranca Santoyo">
     <title>Compiler Research</title>
-
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%99%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -15,39 +16,20 @@
 <div class="page">
 
     <!-- Header -->
-
     <header>
-
         <div class="header-top">
-
             <h1>Compiler Research</h1>
 
-            <div class="search">
-
-                <label class="visually-hidden" for="searchInput">
-                    Search this page
-                </label>
-
-                <input
-                    type="search"
-                    id="searchInput"
-                    placeholder="Search"
-                >
-
-                <button type="button" id="searchButton">
-                    Search
-                </button>
-
-                <span id="searchStatus" class="search-status"
-                      role="status" aria-live="polite"></span>
-
+            <div class="search" role="search">
+                <label class="visually-hidden" for="searchInput">Search this page</label>
+                <input type="search" id="searchInput" name="search" placeholder="Search" autocomplete="off">
+                <button type="button" id="searchButton">Search</button>
+                <span id="searchStatus" class="search-status" role="status" aria-live="polite"></span>
             </div>
-
         </div>
 
         <!-- Main navigation -->
-
-        <nav>
+        <nav aria-label="Main navigation">
             <a href="#home">Home</a>
             <a href="#compiler">Compiler</a>
             <a href="#experiments">Experiments</a>
@@ -55,106 +37,54 @@
             <a href="#research">Research</a>
             <a href="#diary">Diary</a>
             <a href="#changelog">Changelog</a>
+            <a href="#references">References</a>
         </nav>
-
     </header>
 
-
     <!-- Main layout -->
-
     <div class="layout">
 
-
         <!-- Sidebar -->
+        <aside aria-label="Page contents and compiler status">
+            <h2 id="contentsTitle">Contents</h2>
 
-        <aside>
+            <nav aria-labelledby="contentsTitle">
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#objective">Objective and Scope</a></li>
+                    <li><a href="#background">Background</a></li>
+                    <li><a href="#related-work">Related Work</a></li>
+                    <li><a href="#compiler">Compiler</a></li>
+                    <li><a href="compiler/lexer.html">Lexer</a></li>
+                    <li><a href="#experiments">Experiments</a></li>
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="#benchmarks">Benchmarks</a></li>
+                    <li><a href="#research">Research</a></li>
+                    <li><a href="#diary">Development Diary</a></li>
+                    <li><a href="#changelog">Changelog</a></li>
+                    <li><a href="#references">References</a></li>
+                </ul>
+            </nav>
 
-            <h3>Contents</h3>
-
-            <ul>
-
-                <li>
-                    <a href="#introduction">
-                        Introduction
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#objective">
-                        Objective
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#compiler">
-                        Compiler
-                    </a>
-                </li>
-
-                <li>
-                    <a href="compiler/lexer.html">
-                        Lexer
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#experiments">
-                        Experiments
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#experiments">
-                        Experiments
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#benchmarks">
-                        Benchmarks
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#research">
-                        Research
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#diary">
-                        Development Diary
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#changelog">
-                        Changelog
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <h3>Compiler status</h3>
+            <h2 id="statusTitle">Compiler status</h2>
 
             <!-- Rendered from COMPONENTS in script.js -->
-
-            <ul id="componentStatus" class="status-list"></ul>
-
+            <ul id="componentStatus" class="status-list" aria-labelledby="statusTitle"></ul>
         </aside>
 
         <!-- Main content -->
-
-        <main>
+        <main id="main-content">
 
             <!-- Home -->
-
-            <section id="home">
-                <h2>Compiler Optimization Research</h2>
+            <section id="home" aria-labelledby="homeTitle">
+                <h2 id="homeTitle">Compiler Optimization Research</h2>
                 <p>
                     This website documents the development of a custom
-                    compiler and the research conducted for my thesis.
+                    compiler and the research conducted for my thesis:
+                    the design and implementation of a didactic compiler
+                    for x86-64 and the evaluation of the impact of classic
+                    optimizations, compared with the performance of GCC
+                    and LLVM.
                 </p>
                 <p>
                     The main focus of the project is studying the impact
@@ -164,9 +94,8 @@
             </section>
 
             <!-- Introduction -->
-
-            <section id="introduction">
-                <h2>Introduction</h2>
+            <section id="introduction" aria-labelledby="introductionTitle">
+                <h2 id="introductionTitle">Introduction</h2>
                 <p>
                     Compiler optimization is the process of transforming
                     a program in order to improve characteristics such as
@@ -174,146 +103,292 @@
                     while preserving the program's behavior.
                 </p>
                 <p>
+                    Production compilers such as GCC and LLVM group their
+                    optimizations into levels (<code>-O1</code>,
+                    <code>-O2</code>, <code>-O3</code>). Because the
+                    optimizations are bundled, it is hard to know how much
+                    each one contributes individually, which limits their
+                    value for learning how a compiler works internally.
+                    This is especially true for students and developers
+                    who want to understand compilers empirically and
+                    quantitatively.
+                </p>
+                <p>
                     This project aims to implement several optimization
-                    techniques in a custom compiler and measure their
-                    effects through controlled experiments.
+                    techniques in a custom compiler, make each one
+                    individually switchable, and measure their effects
+                    through controlled experiments.
                 </p>
             </section>
 
-
-
             <!-- Objective -->
-
-            <section id="objective">
-                <h2>Objective</h2>
+            <section id="objective" aria-labelledby="objectiveTitle">
+                <h2 id="objectiveTitle">Objective and Scope</h2>
                 <p>
                     The objective of this research is to investigate how
                     different compiler optimizations affect the performance
-                    of generated programs.
+                    of generated programs: to design and implement a
+                    didactic compiler for x86-64 that allows evaluating the
+                    individual and combined impact of seven classic
+                    optimizations on code quality and execution time.
                 </p>
                 <p>
                     The results will be compared with optimization levels
                     provided by established compilers such as
-                    <a href="https://gcc.gnu.org/">
-                        GCC
-                    </a>.
+                    <a href="https://gcc.gnu.org/" rel="noopener noreferrer">GCC</a>
+                    and LLVM (<code>-O2</code> and <code>-O3</code>).
+                </p>
+
+                <h3>Specific objectives</h3>
+                <ul>
+                    <li>Build a compiler for x86-64 with lexical analysis, parsing, intermediate code generation, optimization and object code generation.</li>
+                    <li>Implement each of the seven optimizations independently so they can be enabled or disabled one by one.</li>
+                    <li>Create a set of test programs (benchmarks) and a measurement protocol that makes the results reproducible.</li>
+                    <li>Measure the individual and combined effect of each optimization on execution time and on code quality metrics (instruction count, binary size).</li>
+                    <li>Compare the didactic compiler against GCC and LLVM at <code>-O2</code>/<code>-O3</code> as a reference for achievable performance.</li>
+                    <li>Analyze which optimizations bring the largest benefits and when their effect is limited or depends on other transformations.</li>
+                </ul>
+
+                <h3>Scope</h3>
+                <p>
+                    The contribution is didactic and methodological. GCC and
+                    LLVM are used only as a reference for the maximum
+                    achievable performance; the project does not intend to
+                    compete with them or match the breadth of their
+                    optimizations. The proposed framework is reproducible
+                    and could be reused to evaluate other techniques or
+                    extended to other architectures. It can also serve as
+                    an educational resource for teaching compilers at the
+                    Instituto Tecnológico de Morelia and other TecNM
+                    institutions.
+                </p>
+            </section>
+
+            <!-- Background -->
+            <section id="background" aria-labelledby="backgroundTitle">
+                <h2 id="backgroundTitle">Background</h2>
+
+                <h3>Structure of a compiler</h3>
+                <p>
+                    A compiler is traditionally divided into an analysis
+                    phase (front-end) and a synthesis phase (back-end)
+                    (Aho et al., 2006). Lexical analysis converts the input
+                    characters into tokens; the parser checks the tokens
+                    against the language grammar and builds the Abstract
+                    Syntax Tree (AST). The compiler then generates an
+                    Intermediate Representation (IR), where
+                    architecture-independent optimizations are applied,
+                    and finally code generation emits x86-64 instructions
+                    (Cooper &amp; Torczon, 2012).
+                </p>
+
+                <h3>Intermediate representation and data-flow analysis</h3>
+                <p>
+                    Optimizations are applied on an IR commonly organized
+                    into basic blocks and a control-flow graph (Allen,
+                    1970). Compilers rely on data-flow analysis to decide
+                    which transformations are safe, a framework formalized
+                    by Kildall (1973). Static single assignment (SSA) form
+                    makes many of these analyses simpler and more efficient
+                    (Cytron et al., 1991).
+                </p>
+
+                <h3>The x86-64 architecture</h3>
+                <p>
+                    x86-64 is the 64-bit extension of x86. It has 16
+                    general-purpose registers, variable-length instructions
+                    and SIMD extensions (SSE, AVX) (Hennessy &amp;
+                    Patterson, 2017). The performance of generated code
+                    depends on register allocation, use of the memory
+                    hierarchy and pipelining, so the same optimization can
+                    have different effects depending on the access pattern
+                    and type of computation.
+                </p>
+            </section>
+
+            <!-- Related work -->
+            <section id="related-work" aria-labelledby="relatedWorkTitle">
+                <h2 id="relatedWorkTitle">Related Work</h2>
+                <p>
+                    Previous work falls into four lines: didactic
+                    compilers, reference compiler infrastructures,
+                    empirical evaluation of optimizations, and rigor in
+                    performance measurement.
+                </p>
+                <ul>
+                    <li>
+                        <strong>Didactic compilers.</strong> Ghuloum (2006)
+                        proposed building a compiler incrementally, so each
+                        stage yields a complete working compiler. Appel
+                        (2002) and Wirth (1996) also present full compiler
+                        construction as a teaching tool, but emphasize
+                        front-end design and code generation rather than
+                        measuring the quantitative effect of each
+                        optimization.
+                    </li>
+                    <li>
+                        <strong>Reference infrastructures.</strong> Lattner
+                        and Adve (2004) introduced LLVM, based on a typed
+                        SSA intermediate representation, where each
+                        transformation is an independent pass. This is the
+                        closest precedent to the per-optimization switching
+                        used here. GCC exposes many individual optimization
+                        flags, but their behavior depends on complex
+                        interactions between them, which makes isolated
+                        analysis difficult.
+                    </li>
+                    <li>
+                        <strong>Empirical evaluation of optimizations.</strong>
+                        Hoste and Eeckhout (2008) explored GCC optimization
+                        levels to find flag combinations that beat the
+                        standard levels. Maleki et al. (2011) evaluated how
+                        well production compilers vectorize different code
+                        patterns and found that it varies between
+                        compilers. Ashouri et al. (2018) surveyed compiler
+                        autotuning with machine learning, showing the
+                        importance of choosing which optimizations to
+                        apply. These studies analyze production compilers
+                        or existing flag sets, not a didactic compiler with
+                        optimizations decoupled by design.
+                    </li>
+                    <li>
+                        <strong>Measurement rigor.</strong> Mytkowicz et al.
+                        (2009) showed that seemingly irrelevant factors,
+                        such as environment size or link order, can
+                        significantly change performance results and lead
+                        to wrong conclusions. Georges et al. (2007) argued
+                        for statistically rigorous evaluation using
+                        repetitions and confidence intervals.
+                    </li>
+                </ul>
+
+                <h3>Identified gap</h3>
+                <p>
+                    The reviewed works address didactic compiler
+                    construction, evaluation of production compilers, or
+                    measurement methodology, but do not integrate the three
+                    in a reproducible framework that measures the
+                    individual and combined effect of classic
+                    optimizations in a didactic compiler contrasted with
+                    GCC and LLVM. This research aims to fill that gap.
                 </p>
             </section>
 
             <!-- Compiler -->
-            <section id="compiler">
-                <h2>Compiler</h2>
+            <section id="compiler" aria-labelledby="compilerTitle">
+                <h2 id="compilerTitle">Compiler</h2>
                 <p>
                     The compiler is being developed from scratch.
                     Its development is divided into several stages.
                 </p>
 
                 <!-- Rows are rendered from COMPONENTS in script.js -->
-
                 <table id="componentTable">
+                    <caption class="visually-hidden">Compiler components and their development status</caption>
                     <thead>
                         <tr>
-                            <th>Component</th>
-                            <th>Description</th>
-                            <th>Status</th>
+                            <th scope="col">Component</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
-
             </section>
 
-
-
             <!-- Experiments -->
-
-            <section id="experiments">
-                <h2>Experiments</h2>
+            <section id="experiments" aria-labelledby="experimentsTitle">
+                <h2 id="experimentsTitle">Experiments</h2>
                 <p>
                     Experiments will be used to measure the effect of
                     individual optimization techniques.
                 </p>
-                <h3>
-                    Experiment 001 — Constant Folding
-                </h3>
-                <p>
-                    Evaluates expressions whose operands are known constants at compile time (for example, replacing <b>x = 3 + 5</b> with <b>x = 8</b>), avoiding calculating the sum during every execution.
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
-                <h3>
-                    Experiment 002 — Constant Propagation
-                </h3>
-                <p>
-                    Replaces subsequent uses of a variable with its known constant value at a given point in the program. For example, if <b>a = 10</b> and later <b>b = a + 2</b> is used, it can be rewritten directly as <b>b = 12</b> when combined with constant folding.
-                </p>
 
+                <h3>Experiment 001 — Constant Folding</h3>
                 <p>
-                    Status:
-                    <strong>Planned</strong>
+                    Evaluates expressions whose operands are known constants at compile time (for example, replacing <code>x = 3 + 5</code> with <code>x = 8</code>), avoiding calculating the sum during every execution (Aho et al., 2006; Muchnick, 1997).
                 </p>
-                <h3>
-                    Experiment 003 — Dead Code Elimination (DCE)
-                </h3>
-                <p>
-                    Removes instructions whose results are never used or that are unreachable (such as code following a <b>return</b> statement or variables assigned but never read), reducing code size without changing observable behavior.
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
-                <h3>
-                    Experiment 004 — Common Subexpression Elimination (CSE)
-                </h3>
-                <p>
-                    Detects when the exact same expression is calculated multiple times with identical, unchanged operands, reusing the previously calculated result instead of recomputing it.
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
-                <h3>
-                    Experiment 005 — Loop-Invariant Code Motion (LICM)
-                </h3>
-                <p>
-                    Identifies computations inside a loop whose results do not change across iterations and moves them outside the loop so they execute only once instead of every iteration.
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
-                <h3>
-                    Experiment 006 — Loop Unrolling
-                </h3>
-                <p>
-                    Reduces the number of iterations in a loop by replicating its body multiple times within a single iteration, decreasing loop control overhead (comparisons, jumps, counter increments) at the cost of larger code size.
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
-                <h3>
-                    Experiment 007 — Auto-vectorization
-                </h3>
-                <p>
-                    Transforms repetitive scalar operations (such as element-by-element array addition) into SIMD instructions that process multiple data points in parallel using processor vector registers (such as SSE/AVX on x86-64).
-                </p>
-                <p>
-                    Status:
-                    <strong>Planned</strong>
-                </p>
+                <p>Status: <strong>Planned</strong></p>
 
+                <h3>Experiment 002 — Constant Propagation</h3>
+                <p>
+                    Replaces subsequent uses of a variable with its known constant value at a given point in the program. For example, if <code>a = 10</code> and later <code>b = a + 2</code> is used, it can be rewritten directly as <code>b = 12</code> when combined with constant folding. See also Wegman and Zadeck (1991) for propagation with conditional branches.
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 003 — Dead Code Elimination (DCE)</h3>
+                <p>
+                    Removes instructions whose results are never used or that are unreachable (such as code following a <code>return</code> statement or variables assigned but never read), reducing code size without changing observable behavior. It often takes advantage of opportunities left by the previous optimizations (Muchnick, 1997).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 004 — Common Subexpression Elimination (CSE)</h3>
+                <p>
+                    Detects when the exact same expression is calculated multiple times with identical, unchanged operands, reusing the previously calculated result instead of recomputing it (Cocke, 1970).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 005 — Loop-Invariant Code Motion (LICM)</h3>
+                <p>
+                    Identifies computations inside a loop whose results do not change across iterations and moves them outside the loop so they execute only once instead of every iteration. It requires identifying the loops and verifying that the motion preserves semantics (Aho et al., 2006; Cooper &amp; Torczon, 2012).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 006 — Loop Unrolling</h3>
+                <p>
+                    Reduces the number of iterations in a loop by replicating its body multiple times within a single iteration, decreasing loop control overhead (comparisons, jumps, counter increments) at the cost of larger code size, which can affect the instruction cache (Dongarra &amp; Hinds, 1979; Davidson &amp; Jinturkar, 1995).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 007 — Auto-vectorization</h3>
+                <p>
+                    Transforms repetitive scalar operations (such as element-by-element array addition) into SIMD instructions that process multiple data points in parallel using processor vector registers (such as SSE/AVX on x86-64). Superword-level parallelism (SLP) is a key method for finding these opportunities (Larsen &amp; Amarasinghe, 2000). Success depends on the operations being independent and the data being well aligned in memory (Allen &amp; Kennedy, 2002; Maleki et al., 2011).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Interaction between optimizations</h3>
+                <p>
+                    Optimizations are not independent. Constant folding and
+                    propagation generate dead code that DCE removes, and
+                    unrolling can expose common or invariant subexpressions
+                    that other transformations exploit (Muchnick, 1997).
+                    For this reason, besides the individual effect, the
+                    research measures the combined effect and analyzes the
+                    interactions between techniques.
+                </p>
             </section>
 
+            <!-- Methodology -->
+            <section id="methodology" aria-labelledby="methodologyTitle">
+                <h2 id="methodologyTitle">Methodology</h2>
+                <p>
+                    The method consists of building a complete compilation
+                    pipeline (lexical phase, parsing, IR generation,
+                    optimization passes and x86-64 machine code emission)
+                    and running comparative tests with different
+                    optimization configurations, using GCC and LLVM at
+                    <code>-O2</code>/<code>-O3</code> as the performance
+                    reference.
+                </p>
+
+                <h3>Measurement protocol</h3>
+                <ul>
+                    <li><strong>Metrics:</strong> execution time, number of instructions and binary size.</li>
+                    <li><strong>Configurations:</strong> each optimization enabled alone, and in combinations, compared with a baseline without optimizations.</li>
+                    <li><strong>Rigor:</strong> repeated runs, a controlled environment, and reporting of variability (mean and standard deviation), since measurement bias can produce wrong results (Mytkowicz et al., 2009; Georges et al., 2007).</li>
+                    <li><strong>Reference:</strong> the <code>-O2</code> and <code>-O3</code> levels of GCC and LLVM serve as achievable performance, not as direct competitors.</li>
+                </ul>
+                <p>
+                    The expected outcome is quantitative evidence of how
+                    much each optimization contributes to execution time,
+                    and a comparison between a didactic environment and
+                    industrial compilers.
+                </p>
+            </section>
 
             <!-- Benchmarks -->
-
-            <section id="benchmarks">
-
-                <h2>Benchmarks</h2>
-
+            <section id="benchmarks" aria-labelledby="benchmarksTitle">
+                <h2 id="benchmarksTitle">Benchmarks</h2>
                 <p>
                     Benchmark results will be collected and documented here.
                     Each row records the machine, the number of repetitions
@@ -321,259 +396,101 @@
                     reproduced and defended rather than only reported.
                 </p>
 
-
                 <table>
-
+                    <caption class="visually-hidden">Benchmark results by compiler and optimization flags</caption>
                     <thead>
-
                         <tr>
-
-                            <th>
-                                Compiler
-                            </th>
-
-                            <th>
-                                Flags
-                            </th>
-
-                            <th>
-                                Machine
-                            </th>
-
-                            <th>
-                                Runs
-                            </th>
-
-                            <th>
-                                Mean (ms)
-                            </th>
-
-                            <th>
-                                Std. dev. (ms)
-                            </th>
-
+                            <th scope="col">Compiler</th>
+                            <th scope="col">Flags</th>
+                            <th scope="col">Machine</th>
+                            <th scope="col">Runs</th>
+                            <th scope="col">Mean (ms)</th>
+                            <th scope="col">Std. dev. (ms)</th>
                         </tr>
-
                     </thead>
-
-
                     <tbody>
-
                         <tr>
-
-                            <td>
-                                Custom compiler
-                            </td>
-
-                            <td>
-                                None
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
+                            <td>Custom compiler</td>
+                            <td>None</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
                         </tr>
-
-
                         <tr>
-
-                            <td>
-                                GCC
-                            </td>
-
-                            <td>
-                                -O0
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
+                            <td>GCC</td>
+                            <td><code>-O0</code></td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
                         </tr>
-
-
                         <tr>
-
-                            <td>
-                                GCC
-                            </td>
-
-                            <td>
-                                -O1
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
+                            <td>GCC</td>
+                            <td><code>-O1</code></td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
                         </tr>
-
-
                         <tr>
-
-                            <td>
-                                GCC
-                            </td>
-
-                            <td>
-                                -O2
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
+                            <td>GCC</td>
+                            <td><code>-O2</code></td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
                         </tr>
-
-
                         <tr>
-
-                            <td>
-                                GCC
-                            </td>
-
-                            <td>
-                                -O3
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
-                            <td>
-                                --
-                            </td>
-
+                            <td>GCC</td>
+                            <td><code>-O3</code></td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
+                            <td>--</td>
                         </tr>
-
                     </tbody>
-
                 </table>
-
             </section>
 
-
-
             <!-- Research -->
+            <section id="research" aria-labelledby="researchTitle">
+                <h2 id="researchTitle">Research</h2>
 
-            <section id="research">
-
-                <h2>Research</h2>
-
-
-                <h3>
-                    Research question
-                </h3>
-
+                <h3>Research question</h3>
                 <p>
                     What is the impact of selected compiler optimizations
                     on the performance of programs generated by a custom
                     compiler compared with established compiler
-                    optimization levels?
+                    optimization levels? More precisely: how do classic
+                    optimizations in a didactic x86-64 compiler affect the
+                    quality of the generated code and its execution time,
+                    and how close are these results to those of production
+                    compilers such as GCC and LLVM?
                 </p>
 
-
-                <h3>
-                    Topics
-                </h3>
-
+                <h3>Relevance</h3>
                 <ul>
-
-                    <li>
-                        Compiler construction
-                    </li>
-
-                    <li>
-                        Lexical analysis
-                    </li>
-
-                    <li>
-                        Parsing
-                    </li>
-
-                    <li>
-                        Intermediate representations
-                    </li>
-
-                    <li>
-                        Compiler optimization
-                    </li>
-
-                    <li>
-                        Code generation
-                    </li>
-
-                    <li>
-                        Performance measurement
-                    </li>
-
+                    <li><strong>Practical:</strong> being able to enable and disable optimizations independently shows how each transformation changes the generated code and its performance, helping build technical judgment for optimization decisions.</li>
+                    <li><strong>Methodological:</strong> a reproducible framework that combines compiler construction, benchmark selection and a measurement protocol.</li>
+                    <li><strong>Institutional:</strong> an educational resource for teaching compilers.</li>
                 </ul>
 
+                <h3>Topics</h3>
+                <ul>
+                    <li>Compiler construction</li>
+                    <li>Lexical analysis</li>
+                    <li>Parsing</li>
+                    <li>Intermediate representations</li>
+                    <li>Compiler optimization</li>
+                    <li>Code generation</li>
+                    <li>Performance measurement</li>
+                </ul>
             </section>
 
             <!-- Development Diary -->
-
-            <section id="diary">
-
-                <h2>Development Diary</h2>
-
+            <section id="diary" aria-labelledby="diaryTitle">
+                <h2 id="diaryTitle">Development Diary</h2>
                 <p>
                     A chronological record of the development of the
                     compiler and the progress of the research.
@@ -585,113 +502,90 @@
                     survives a cleared cache or a different machine.
                 </p>
 
-
                 <div class="diary-editor">
+                    <label for="diaryDate">Date</label>
+                    <input type="date" id="diaryDate" name="diaryDate">
 
-
-                    <label for="diaryDate">
-                        Date
-                    </label>
-
-
-                    <input
-                        type="date"
-                        id="diaryDate"
-                    >
-
-
-                    <label for="diaryText">
-                        What did you work on?
-                    </label>
-
-
-                    <textarea
-                        id="diaryText"
-                        rows="8"
-                        placeholder="Write about what you worked on today..."
-                    ></textarea>
-
+                    <label for="diaryText">What did you work on?</label>
+                    <textarea id="diaryText" name="diaryText" rows="8" placeholder="Write about what you worked on today..."></textarea>
 
                     <div class="diary-editor-actions">
-                        <button type="button" id="diarySaveButton">
-                            Save entry
-                        </button>
-                        <button type="button" id="diaryCancelButton" hidden>
-                            Cancel
-                        </button>
+                        <button type="button" id="diarySaveButton">Save entry</button>
+                        <button type="button" id="diaryCancelButton" hidden>Cancel</button>
                     </div>
 
-                    <p id="diaryStatus" class="diary-status"
-                       role="status" aria-live="polite"></p>
-
+                    <p id="diaryStatus" class="diary-status" role="status" aria-live="polite"></p>
                 </div>
 
-
                 <div class="diary-toolbar">
-
                     <span id="diaryCount" class="diary-count"></span>
-
-                    <button type="button" id="exportJsonButton">
-                        Export JSON
-                    </button>
-
-                    <button type="button" id="exportMarkdownButton">
-                        Export Markdown
-                    </button>
-
-                    <button type="button" id="importButton">
-                        Import JSON
-                    </button>
-
-                    <input
-                        type="file"
-                        id="importInput"
-                        accept="application/json,.json"
-                        hidden
-                    >
-
+                    <button type="button" id="exportJsonButton">Export JSON</button>
+                    <button type="button" id="exportMarkdownButton">Export Markdown</button>
+                    <button type="button" id="importButton">Import JSON</button>
+                    <input type="file" id="importInput" name="importInput" accept="application/json,.json" aria-label="Import diary entries from a JSON file" hidden>
                 </div>
 
                 <!-- Saved entries appear here -->
                 <div id="diaryEntries"></div>
-
             </section>
 
-
-
             <!-- Changelog -->
-            <section id="changelog">
-                <h2>Changelog</h2>
-                <h3>
-                    2026-09-16
-                </h3>
+            <section id="changelog" aria-labelledby="changelogTitle">
+                <h2 id="changelogTitle">Changelog</h2>
+
+                <h3>2026-10-06</h3>
                 <p>
-                    Created the project documentation website.
+                    Added background, related work, scope, methodology and
+                    interaction notes, citations in the experiments, and a
+                    References section. Fixed HTML validation and
+                    accessibility warnings.
                 </p>
 
+                <h3>2026-09-16</h3>
+                <p>Created the project documentation website.</p>
+            </section>
+
+            <!-- References -->
+            <section id="references" aria-labelledby="referencesTitle">
+                <h2 id="referencesTitle">References</h2>
+                <ul class="references">
+                    <li>Aho, A. V., Lam, M. S., Sethi, R., &amp; Ullman, J. D. (2006). <cite>Compilers: Principles, techniques, and tools</cite> (2nd ed.). Addison-Wesley.</li>
+                    <li>Allen, F. E. (1970). Control flow analysis. <em>ACM SIGPLAN Notices, 5</em>(7), 1–19.</li>
+                    <li>Allen, R., &amp; Kennedy, K. (2002). <cite>Optimizing compilers for modern architectures: A dependence-based approach</cite>. Morgan Kaufmann.</li>
+                    <li>Appel, A. W. (2002). <cite>Modern compiler implementation in C</cite>. Cambridge University Press.</li>
+                    <li>Ashouri, A. H., Killian, W., Cavazos, J., Palermo, G., &amp; Silvano, C. (2018). A survey on compiler autotuning using machine learning. <em>ACM Computing Surveys, 51</em>(5), 1–42.</li>
+                    <li>Cocke, J. (1970). Global common subexpression elimination. <em>ACM SIGPLAN Notices, 5</em>(7), 20–24.</li>
+                    <li>Cooper, K. D., &amp; Torczon, L. (2012). <cite>Engineering a compiler</cite> (2nd ed.). Morgan Kaufmann.</li>
+                    <li>Cytron, R., Ferrante, J., Rosen, B. K., Wegman, M. N., &amp; Zadeck, F. K. (1991). Efficiently computing static single assignment form and the control dependence graph. <em>ACM Transactions on Programming Languages and Systems, 13</em>(4), 451–490.</li>
+                    <li>Davidson, J. W., &amp; Jinturkar, S. (1995). <cite>An aggressive approach to loop unrolling</cite> (Technical Report CS-95-26). University of Virginia.</li>
+                    <li>Dongarra, J. J., &amp; Hinds, A. R. (1979). Unrolling loops in Fortran. <em>Software: Practice and Experience, 9</em>(3), 219–226.</li>
+                    <li>Georges, A., Buytaert, D., &amp; Eeckhout, L. (2007). Statistically rigorous Java performance evaluation. <em>ACM SIGPLAN Notices, 42</em>(10), 57–76.</li>
+                    <li>Ghuloum, A. (2006). An incremental approach to compiler construction. <em>Proceedings of the 2006 Scheme and Functional Programming Workshop</em>.</li>
+                    <li>Hennessy, J. L., &amp; Patterson, D. A. (2017). <cite>Computer architecture: A quantitative approach</cite> (6th ed.). Morgan Kaufmann.</li>
+                    <li>Hoste, K., &amp; Eeckhout, L. (2008). Cole: Compiler optimization level exploration. <em>Proceedings of the 6th Annual IEEE/ACM International Symposium on Code Generation and Optimization (CGO)</em>, 165–174.</li>
+                    <li>Kildall, G. A. (1973). A unified approach to global program optimization. <em>Proceedings of the 1st ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages (POPL)</em>, 194–206.</li>
+                    <li>Larsen, S., &amp; Amarasinghe, S. (2000). Exploiting superword level parallelism with multimedia instruction sets. <em>Proceedings of the ACM SIGPLAN 2000 Conference on Programming Language Design and Implementation (PLDI)</em>, 145–156.</li>
+                    <li>Lattner, C., &amp; Adve, V. (2004). LLVM: A compilation framework for lifelong program analysis &amp; transformation. <em>Proceedings of the International Symposium on Code Generation and Optimization (CGO)</em>, 75–86.</li>
+                    <li>Maleki, S., Gao, Y., Garzarán, M. J., Wong, T., &amp; Padua, D. A. (2011). An evaluation of vectorizing compilers. <em>Proceedings of the 2011 International Conference on Parallel Architectures and Compilation Techniques (PACT)</em>, 372–382.</li>
+                    <li>Muchnick, S. S. (1997). <cite>Advanced compiler design and implementation</cite>. Morgan Kaufmann.</li>
+                    <li>Mytkowicz, T., Diwan, A., Hauswirth, M., &amp; Sweeney, P. F. (2009). Producing wrong data without doing anything obviously wrong! <em>ACM SIGPLAN Notices, 44</em>(3), 265–276.</li>
+                    <li>Wegman, M. N., &amp; Zadeck, F. K. (1991). Constant propagation with conditional branches. <em>ACM Transactions on Programming Languages and Systems, 13</em>(2), 181–210.</li>
+                    <li>Wirth, N. (1996). <cite>Compiler construction</cite>. Addison-Wesley.</li>
+                </ul>
             </section>
 
         </main>
-
     </div>
 
     <!-- Footer -->
-
     <footer>
-        <p>
-            Compiler Research ·
-            Last updated: 16 September 2026
-        </p>
+        <p>Compiler Research · Last updated: 6 October 2026</p>
     </footer>
-
 
 </div>
 
-
 <!-- JavaScript -->
-
 <script src="script.js"></script>
 
 </body>
-
 </html>
