@@ -56,6 +56,8 @@
 
             <li><a href="#overview">Overview</a></li>
 
+            <li><a href="https://github.com/RobloxCode/lexer">Source code</a></li>
+
             <li><a href="#stages">Stages of lexing</a></li>
 
             <li><a href="#io">Input and output</a></li>
@@ -167,6 +169,53 @@
               <li>Operators (e.g., <code>+</code>, <code>-</code>, <code>*</code>, <code>==</code>)</li>
               <li>Grouping symbols and separators (e.g., parentheses, brackets, braces, <code>;</code>)</li>
             </ul>
+
+          </section>
+
+          <!-- Source code -->
+          <section id="source">
+
+            <h2>Source code</h2>
+
+            <p>
+              The lexer is written in C and is open source. The code, the
+              documentation comments in the headers and the test suite are
+              available on GitHub:
+              <a href="https://github.com/RobloxCode/lexer">github.com/RobloxCode/lexer</a>.
+            </p>
+
+            <h3>Get it and build it</h3>
+
+          <pre><code>git clone https://github.com/RobloxCode/lexer.git
+          cd lexer
+          make</code></pre>
+
+            <p>
+              This builds the static library <code>build/liblexer.a</code>. A C11
+              compiler (GCC or Clang) and GNU make are required.
+            </p>
+
+            <h3>Use it from your own program</h3>
+
+            <p>
+              Include <code>lexer/lexer.h</code> and link against the library. With
+              the repository cloned next to your <code>main.c</code>, no
+              installation is needed:
+            </p>
+
+          <pre><code>cc -std=c11 -Ilexer/include main.c lexer/build/liblexer.a -o app
+          ./app some_file.c</code></pre>
+
+            <p>
+              The README in the repository explains the other option (installing the
+              library system-wide or into <code>~/.local</code>), how editors find the
+              headers, and includes a complete example program.
+            </p>
+
+            <h3>Run the tests</h3>
+
+          <pre><code>cd lexer/tests
+          make test</code></pre>
 
           </section>
 
