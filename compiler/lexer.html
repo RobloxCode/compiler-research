@@ -9,6 +9,83 @@
 
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../reference.css">
+
+    <style>
+      /* ---- Runnable example ---- */
+      #demo .run-btn {
+        font: bold 12px sans-serif;
+        padding: 2px 8px;
+        margin: 0 0 8px;
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        background: #eee;
+        color: #222;
+        cursor: pointer;
+      }
+      #demo .run-btn:hover { background: #e2e2e2; }
+
+      #demo .code-wrap {
+        position: relative;
+        background: #f8f8f8;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      #demo .code-wrap pre,
+      #demo .code-wrap textarea {
+        margin: 0;
+        padding: 12px 14px;
+        border: 0;
+        box-sizing: border-box;
+        font: 13px/1.5 Consolas, "DejaVu Sans Mono", Menlo, monospace;
+        white-space: pre;
+        word-wrap: normal;
+        tab-size: 4;
+        letter-spacing: normal;
+      }
+      #demo .code-wrap pre.hl {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        background: transparent;
+        color: #222;
+      }
+      #demo .code-wrap textarea {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 18em;
+        overflow: auto;
+        resize: vertical;
+        background: transparent;
+        color: transparent;
+        caret-color: #222;
+        outline: none;
+      }
+      #demo .code-wrap textarea::selection { background: rgba(80, 140, 255, 0.3); }
+
+      #demo .hl .c { color: #3d7a8a; font-style: italic; }
+      #demo .hl .s { color: #b3261e; }
+      #demo .hl .n { color: #0a7c8c; }
+      #demo .hl .p { color: #a67c00; }
+      #demo .hl .h { color: #3d7a8a; font-style: italic; }
+      #demo .hl .k { color: #1f7a1f; font-weight: bold; }
+      #demo .hl .t { color: #c2185b; }
+
+      #demo .out-label { margin: 14px 0 4px; font-weight: bold; }
+      #demo .out-box {
+        background: #f8f8f8;
+        color: #222;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 10px 14px;
+        font: 13px/1.5 Consolas, "DejaVu Sans Mono", Menlo, monospace;
+        white-space: pre;
+        overflow: auto;
+        max-height: 28em;
+      }
+      #demo .out-box .bad { color: #b3261e; }
+    </style>
   </head>
 
   <body>
@@ -186,9 +263,9 @@
 
             <h3>Get it and build it</h3>
 
-          <pre><code>git clone https://github.com/RobloxCode/lexer.git
-          cd lexer
-          make</code></pre>
+<pre><code>git clone https://github.com/RobloxCode/lexer.git
+cd lexer
+make</code></pre>
 
             <p>
               This builds the static library <code>build/liblexer.a</code>. A C11
@@ -203,8 +280,8 @@
               installation is needed:
             </p>
 
-          <pre><code>cc -std=c11 -Ilexer/include main.c lexer/build/liblexer.a -o app
-          ./app some_file.c</code></pre>
+<pre><code>cc -std=c11 -Ilexer/include main.c lexer/build/liblexer.a -o app
+./app some_file.c</code></pre>
 
             <p>
               The README in the repository explains the other option (installing the
@@ -214,8 +291,8 @@
 
             <h3>Run the tests</h3>
 
-          <pre><code>cd lexer/tests
-          make test</code></pre>
+<pre><code>cd lexer/tests
+make test</code></pre>
 
           </section>
 
@@ -904,7 +981,9 @@ advance(l);
             <h2>Implementation</h2>
 
             <p>
-              How the lexer works in code.
+              How the lexer works in code. The full implementation is
+              on GitHub:
+              <a href="https://github.com/RobloxCode/lexer">github.com/RobloxCode/lexer</a>.
             </p>
 
 <pre><code>/* code here */</code></pre>
@@ -913,15 +992,272 @@ advance(l);
 
 
           <!-- Examples -->
-          <!-- <section id="examples">
+          <section id="examples">
 
             <h2>Examples</h2>
 
             <p>
-              A small input and the tokens produced from it.
+              Edit the C code below and press <em>Run this code</em> to
+              see the tokens the lexer produces for it. Comments and
+              whitespace are skipped, operators use the longest match,
+              and numbers accept decimal points, exponents and suffixes.
             </p>
 
-          </section> -->
+            <div id="demo">
+
+              <h3>Example</h3>
+
+              <button type="button" class="run-btn" id="demo-run">Run this code</button>
+
+              <div class="code-wrap">
+                <pre class="hl" id="demo-hl" aria-hidden="true"></pre>
+                <textarea id="demo-input" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="C source code">int main(void)
+{
+    int example = 10;
+
+    if (example > 3) {
+        printf("hello\n");
+    }
+
+    return 0;
+}</textarea>
+              </div>
+
+              <div id="demo-result" hidden>
+                <p class="out-label">Output:</p>
+                <div class="out-box" id="demo-out"></div>
+              </div>
+
+            </div>
+
+            <p>
+              This demo is a small JavaScript port written for the page,
+              so it runs in your browser. It follows the same rules as
+              the C lexer but is not the C code itself.
+            </p>
+
+            <script>
+              (function () {
+                /* ---------- Lexer (JavaScript port) ---------- */
+
+                var KEYWORDS = new Set(("auto break case char const continue default do double else enum extern " +
+                  "float for goto if int long register return short signed sizeof static struct switch typedef " +
+                  "union unsigned void volatile while inline restrict _Bool _Complex _Imaginary").split(" "));
+
+                var OPS3 = ["<<=", ">>=", "..."];
+                var OPS2 = ["->", "++", "--", "<<", ">>", "<=", ">=", "==", "!=", "&&", "||",
+                            "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "##"];
+                var OPS1 = "+-*/%=<>!&|^~?:.#";
+                var PUNCT = "(){}[];,";
+
+                var NAMES = {
+                  "(": "LPAREN", ")": "RPAREN", "{": "LBRACE", "}": "RBRACE",
+                  "[": "LBRACKET", "]": "RBRACKET", ";": "SEMICOLON", ",": "COMMA",
+                  "=": "ASSIGN", ">": "GREATER", "<": "LESS", "+": "PLUS", "-": "MINUS",
+                  "*": "STAR", "/": "SLASH", "%": "PERCENT", "!": "BANG", "&": "AMP",
+                  "|": "PIPE", "^": "CARET", "~": "TILDE", "?": "QUESTION", ":": "COLON",
+                  ".": "DOT", "#": "HASH", "<<=": "LSHIFT_ASSIGN", ">>=": "RSHIFT_ASSIGN",
+                  "...": "ELLIPSIS", "->": "ARROW", "++": "INCREMENT", "--": "DECREMENT",
+                  "<<": "LSHIFT", ">>": "RSHIFT", "<=": "LESS_EQ", ">=": "GREATER_EQ",
+                  "==": "EQUAL", "!=": "NOT_EQUAL", "&&": "AND", "||": "OR",
+                  "+=": "PLUS_ASSIGN", "-=": "MINUS_ASSIGN", "*=": "STAR_ASSIGN",
+                  "/=": "SLASH_ASSIGN", "%=": "PERCENT_ASSIGN", "&=": "AND_ASSIGN",
+                  "|=": "OR_ASSIGN", "^=": "XOR_ASSIGN", "##": "PASTE"
+                };
+
+                var isDigit = function (c) { return c >= "0" && c <= "9"; };
+                var isAlpha = function (c) { return /[A-Za-z_]/.test(c); };
+                var isAlnum = function (c) { return isAlpha(c) || isDigit(c); };
+
+                function lex(src) {
+                  var toks = [], i = 0, line = 1, col = 1;
+
+                  function adv(n) {
+                    for (var k = 0; k < n; k++) {
+                      if (src[i] === "\n") { line++; col = 1; } else { col++; }
+                      i++;
+                    }
+                  }
+                  function push(type, text, l, c) { toks.push({ type: type, text: text, line: l, col: c }); }
+
+                  while (i < src.length) {
+                    var ch = src[i], l = line, c = col, start = i;
+
+                    if (/\s/.test(ch)) { adv(1); continue; }
+
+                    if (src.startsWith("//", i)) {
+                      while (i < src.length && src[i] !== "\n") adv(1);
+                      continue;
+                    }
+                    if (src.startsWith("/*", i)) {
+                      adv(2);
+                      while (i < src.length && !src.startsWith("*/", i)) adv(1);
+                      if (i < src.length) adv(2);
+                      continue;
+                    }
+
+                    if (isAlpha(ch)) {
+                      while (i < src.length && isAlnum(src[i])) adv(1);
+                      var word = src.slice(start, i);
+                      push(KEYWORDS.has(word) ? "KEYWORD" : "IDENTIFIER", word, l, c);
+                      continue;
+                    }
+
+                    if (isDigit(ch) || (ch === "." && isDigit(src[i + 1] || ""))) {
+                      var seenDot = false, bad = false;
+                      if (ch === "0" && /[xX]/.test(src[i + 1] || "")) {
+                        adv(2);
+                        while (i < src.length && /[0-9a-fA-F]/.test(src[i])) adv(1);
+                      } else {
+                        while (i < src.length && (isDigit(src[i]) || src[i] === ".")) {
+                          if (src[i] === ".") { if (seenDot) bad = true; seenDot = true; }
+                          adv(1);
+                        }
+                        if (/[eE]/.test(src[i] || "")) {
+                          var j = i + 1;
+                          if (/[+-]/.test(src[j] || "")) j++;
+                          if (isDigit(src[j] || "")) {
+                            adv(j - i);
+                            while (i < src.length && isDigit(src[i])) adv(1);
+                          }
+                        }
+                      }
+                      while (i < src.length && /[uUlLfF]/.test(src[i])) adv(1);
+                      if (i < src.length && isAlnum(src[i])) {
+                        bad = true;
+                        while (i < src.length && isAlnum(src[i])) adv(1);
+                      }
+                      push(bad ? "INVALID" : "NUMBER", src.slice(start, i), l, c);
+                      continue;
+                    }
+
+                    if (ch === '"' || ch === "'") {
+                      var q = ch, closed = false;
+                      adv(1);
+                      while (i < src.length && src[i] !== "\n") {
+                        if (src[i] === "\\") { adv(2); continue; }
+                        if (src[i] === q) { adv(1); closed = true; break; }
+                        adv(1);
+                      }
+                      push(closed ? (q === '"' ? "STRING" : "CHAR") : "INVALID", src.slice(start, i), l, c);
+                      continue;
+                    }
+
+                    /* operators: try the longest match first (3, then 2, then 1 char) */
+                    var t3 = src.substr(i, 3), t2 = src.substr(i, 2);
+                    if (OPS3.indexOf(t3) !== -1) { adv(3); push("OPERATOR", t3, l, c); continue; }
+                    if (OPS2.indexOf(t2) !== -1) { adv(2); push("OPERATOR", t2, l, c); continue; }
+                    if (OPS1.indexOf(ch) !== -1) { adv(1); push("OPERATOR", ch, l, c); continue; }
+                    if (PUNCT.indexOf(ch) !== -1) { adv(1); push("PUNCT", ch, l, c); continue; }
+
+                    adv(1);
+                    push("INVALID", ch, l, c);
+                  }
+
+                  push("EOF", "", line, col);
+                  return toks;
+                }
+
+                function typeName(t) {
+                  if (t.type === "KEYWORD") return "KW_" + t.text.toUpperCase();
+                  if (t.type === "NUMBER") {
+                    return (!/^0[xX]/.test(t.text) && /[.eE]/.test(t.text)) ? "FLOAT" : "INTEGER";
+                  }
+                  if (t.type === "OPERATOR" || t.type === "PUNCT") return NAMES[t.text] || t.type;
+                  return t.type;
+                }
+
+                /* ---------- Syntax highlighting for the editor ---------- */
+
+                var TYPES = new Set("int char short long float double void signed unsigned size_t FILE bool _Bool".split(" "));
+                var HL_RE = new RegExp(
+                  "(\\/\\*[\\s\\S]*?(?:\\*\\/|(?![\\s\\S]))|\\/\\/[^\\n]*)" +            /* 1 comment */
+                  "|(\"(?:\\\\.|[^\"\\\\\\n])*\"?|'(?:\\\\.|[^'\\\\\\n])*'?)" +            /* 2 string/char */
+                  "|(^[ \\t]*#[ \\t]*[A-Za-z_]+)" +                                        /* 3 preprocessor */
+                  "|(\\b0[xX][0-9a-fA-F]+[uUlL]*|(?:\\b\\d+\\.?\\d*|\\.\\d+)(?:[eE][+-]?\\d+)?[uUlLfF]*)" + /* 4 number */
+                  "|(\\b[A-Za-z_]\\w*\\b)" +                                               /* 5 word */
+                  "|(<[A-Za-z_][\\w\\/.]*\\.h>)",                                          /* 6 header name */
+                  "gm"
+                );
+
+                function esc(s) {
+                  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                }
+
+                function highlight(src) {
+                  var out = "", last = 0, m;
+                  HL_RE.lastIndex = 0;
+                  while ((m = HL_RE.exec(src)) !== null) {
+                    var t = m[0], cls = null;
+                    if (m[1]) cls = "c";
+                    else if (m[2]) cls = "s";
+                    else if (m[3]) cls = "p";
+                    else if (m[4]) cls = "n";
+                    else if (m[5]) cls = TYPES.has(t) ? "t" : (KEYWORDS.has(t) ? "k" : null);
+                    else if (m[6]) cls = "h";
+                    out += esc(src.slice(last, m.index));
+                    out += cls ? '<span class="' + cls + '">' + esc(t) + "</span>" : esc(t);
+                    last = HL_RE.lastIndex;
+                  }
+                  return out + esc(src.slice(last)) + "\n";
+                }
+
+                /* ---------- Wiring ---------- */
+
+                var input = document.getElementById("demo-input");
+                var hl = document.getElementById("demo-hl");
+                var result = document.getElementById("demo-result");
+                var out = document.getElementById("demo-out");
+
+                function paint() {
+                  hl.innerHTML = highlight(input.value);
+                  hl.scrollTop = input.scrollTop;
+                  hl.scrollLeft = input.scrollLeft;
+                }
+
+                input.addEventListener("input", paint);
+                input.addEventListener("scroll", function () {
+                  hl.scrollTop = input.scrollTop;
+                  hl.scrollLeft = input.scrollLeft;
+                });
+                input.addEventListener("keydown", function (e) {
+                  if (e.key === "Tab" && !e.shiftKey) {
+                    e.preventDefault();
+                    var s = input.selectionStart, en = input.selectionEnd;
+                    input.value = input.value.slice(0, s) + "    " + input.value.slice(en);
+                    input.selectionStart = input.selectionEnd = s + 4;
+                    paint();
+                  }
+                });
+
+                function run() {
+                  var toks = lex(input.value);
+                  var frag = document.createDocumentFragment();
+
+                  toks.forEach(function (t) {
+                    var lexeme = t.text;
+                    if ((t.type === "STRING" || t.type === "CHAR") && lexeme.length >= 2) {
+                      lexeme = lexeme.slice(1, -1);
+                    }
+                    var pos = "[ " + t.line + ":" + t.col + " ]";
+                    while (pos.length < 11) pos += " ";
+
+                    var row = document.createElement("div");
+                    if (t.type === "INVALID") row.className = "bad";
+                    row.textContent = pos + "  " + typeName(t) + "(" + lexeme + ")";
+                    frag.appendChild(row);
+                  });
+
+                  out.replaceChildren(frag);
+                  result.hidden = false;
+                }
+
+                document.getElementById("demo-run").addEventListener("click", run);
+                paint();
+              })();
+            </script>
+
+          </section>
 
 
           <!-- Problems -->
@@ -929,8 +1265,57 @@ advance(l);
 
             <h2>Problems</h2>
 
+            <h3>Lexing multi-character operators</h3>
+
+            <p>
+              Many operators are made of several characters, and the
+              shorter ones are prefixes of the longer ones:
+              <code>&lt;</code>, <code>&lt;&lt;</code> and
+              <code>&lt;&lt;=</code> all start the same way. If the
+              lexer matches the shortest operator first, it stops at
+              <code>&lt;</code> and splits <code>&lt;&lt;=</code> into
+              three tokens.
+            </p>
+
+            <p>
+              The approach used here is to check from the longest
+              candidate to the shortest: first the three characters
+              <code>cur</code>, <code>peek</code> and <code>peek2</code>,
+              then the two characters <code>cur</code> and
+              <code>peek</code>, and only then <code>cur</code> alone.
+              The first operator that matches is the biggest one, which
+              is the <em>maximal munch</em> rule. This is also the
+              reason the lexer needs two characters of lookahead.
+            </p>
+
+            <h3>Lexing numbers</h3>
+
+            <p>
+              A number is not just a run of digits, and a few details
+              have to be checked while it is being built:
+            </p>
+
             <ul>
-              <li>--</li>
+              <li>
+                <strong>Decimal points:</strong> <code>3.14</code> is
+                one number, but <code>1.2.3</code> is malformed. The
+                lexer has to remember whether it has already seen a
+                point. A <code>.</code> followed by a digit
+                (<code>.5</code>) starts a number, while a lone
+                <code>.</code> is an operator.
+              </li>
+              <li>
+                <strong>Suffixes:</strong> literals such as
+                <code>10u</code>, <code>10UL</code> and
+                <code>3.14f</code> carry a suffix that is part of the
+                same lexeme. After the digits, the lexer accepts the
+                valid suffix letters.
+              </li>
+              <li>
+                <strong>Letters that do not belong:</strong> something
+                like <code>12abc</code> is not a number followed by an
+                identifier, so it is reported as an invalid token.
+              </li>
             </ul>
 
           </section>
