@@ -53,6 +53,7 @@ body {
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
+select:focus-visible,
 textarea:focus-visible {
     outline: 2px solid #0645ad;
 
@@ -253,6 +254,8 @@ aside p {
  */
 
 main {
+    min-width: 0;
+
     padding: 25px 35px;
 }
 
@@ -334,7 +337,8 @@ li {
  * Development diary
  */
 
-.diary-warning {
+.diary-warning,
+.notice {
     padding: 8px 10px;
 
     background: #fff8e0;
@@ -394,7 +398,9 @@ li {
 
 .diary-editor button,
 .diary-toolbar button,
-.diary-entry-actions button {
+.diary-entry-actions button,
+.control-bar button,
+.stage-nav button {
     padding: 5px 12px;
 
     font-family: "Times New Roman", Times, serif;
@@ -410,8 +416,21 @@ li {
 
 .diary-editor button:hover,
 .diary-toolbar button:hover,
-.diary-entry-actions button:hover {
+.diary-entry-actions button:hover,
+.control-bar button:hover,
+.stage-nav button:hover {
     background: #dddddd;
+}
+
+.control-bar button:disabled,
+.stage-nav button:disabled {
+    color: #666666;
+
+    background: #f5f5f5;
+
+    border-color: #bbbbbb;
+
+    cursor: default;
 }
 
 .diary-status {
@@ -520,6 +539,587 @@ li {
     line-height: 1.5;
 
     max-width: 750px;
+}
+
+
+/*
+ * Shared: definition lists and panels
+ * (architecture, optimization playground, assembly explorer)
+ */
+
+.info-list {
+    margin: 15px 0 0;
+}
+
+.info-list dt {
+    margin-top: 14px;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+.info-list dt:first-child {
+    margin-top: 0;
+}
+
+.info-list dd {
+    margin: 4px 0 0;
+
+    max-width: 750px;
+
+    line-height: 1.45;
+}
+
+.info-list ul {
+    margin: 0;
+
+    padding-left: 20px;
+}
+
+.stage-panel {
+    padding: 15px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #aaaaaa;
+
+    scroll-margin-top: 15px;
+}
+
+.stage-panel h3 {
+    margin: 0 0 6px;
+}
+
+.stage-panel p {
+    margin: 6px 0;
+}
+
+
+/*
+ * Controls
+ */
+
+.control-bar {
+    display: flex;
+
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    margin-top: 20px;
+
+    padding: 10px 15px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #aaaaaa;
+}
+
+.control-bar label,
+.control-label {
+    font-weight: bold;
+}
+
+.control-bar select {
+    padding: 4px;
+
+    font-family: "Times New Roman", Times, serif;
+
+    font-size: 15px;
+
+    border: 1px solid #999999;
+
+    background: white;
+}
+
+.control-radios {
+    display: flex;
+
+    flex-wrap: wrap;
+    gap: 5px 15px;
+}
+
+.control-radios label {
+    font-weight: normal;
+}
+
+.control-summary {
+    margin: 10px 0 0;
+}
+
+
+/*
+ * Code samples
+ */
+
+.code-compare {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+
+    margin-top: 15px;
+}
+
+.code-pane {
+    min-width: 0;
+}
+
+.code-pane h3 {
+    margin: 0 0 6px;
+
+    font-size: 16px;
+}
+
+.code {
+    margin: 0;
+
+    padding: 8px 0;
+
+    overflow-x: auto;
+
+    background: #f8f8f8;
+
+    border: 1px solid #aaaaaa;
+
+    font-family: "Courier New", Courier, monospace;
+
+    font-size: 13px;
+
+    line-height: 1.45;
+
+    counter-reset: code-line;
+}
+
+.code code {
+    font-family: inherit;
+}
+
+.code-line {
+    display: block;
+
+    min-height: 1.45em;
+
+    padding-right: 10px;
+
+    border-left: 3px solid transparent;
+
+    white-space: pre;
+
+    counter-increment: code-line;
+}
+
+.code-line::before {
+    content: counter(code-line);
+    content: counter(code-line) / "";
+
+    display: inline-block;
+
+    width: 2.6em;
+
+    margin-right: 10px;
+
+    text-align: right;
+
+    color: #666666;
+}
+
+.code-line.is-old {
+    background: #fdecec;
+
+    border-left-color: #9a1c1c;
+}
+
+.code-line.is-old::before {
+    content: counter(code-line) " \2212";
+    content: counter(code-line) " \2212" / "";
+}
+
+.code-line.is-new {
+    background: #e8f4e8;
+
+    border-left-color: #1a6b1a;
+}
+
+.code-line.is-new::before {
+    content: counter(code-line) " +";
+    content: counter(code-line) " +" / "";
+}
+
+.code-line.is-linked {
+    background: #ffef9f;
+
+    border-left-color: #b38600;
+}
+
+.code-placeholder {
+    display: block;
+
+    padding: 0 10px;
+
+    color: #555555;
+
+    font-style: italic;
+
+    white-space: normal;
+}
+
+.code-legend {
+    margin: 8px 0 0;
+
+    font-size: 14px;
+
+    color: #555555;
+}
+
+
+/*
+ * Syntax highlighting
+ */
+
+.tok-keyword {
+    color: #0645ad;
+
+    font-weight: bold;
+}
+
+.tok-type {
+    color: #0b6e6e;
+}
+
+.tok-number {
+    color: #9a5b00;
+}
+
+.tok-comment {
+    color: #666666;
+
+    font-style: italic;
+}
+
+.tok-preproc {
+    color: #7a3e9d;
+}
+
+.tok-function {
+    color: #111111;
+
+    font-weight: bold;
+}
+
+.tok-mnemonic {
+    color: #111111;
+
+    font-weight: bold;
+}
+
+.tok-register {
+    color: #0645ad;
+}
+
+.tok-size {
+    color: #0b6e6e;
+}
+
+.tok-label {
+    color: #7a3e9d;
+}
+
+
+/*
+ * Compiler architecture
+ */
+
+.arch {
+    display: grid;
+
+    grid-template-columns: 270px 1fr;
+    gap: 25px;
+    align-items: start;
+
+    margin-top: 20px;
+}
+
+.pipeline {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.pipeline li {
+    margin: 0;
+}
+
+.pipeline-stage {
+    display: grid;
+
+    grid-template-columns: 22px 1fr;
+    column-gap: 6px;
+
+    width: 100%;
+
+    padding: 7px 10px;
+
+    text-align: left;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 14px;
+
+    color: #111111;
+
+    background: #f5f5f5;
+
+    border: 1px solid #888888;
+
+    cursor: pointer;
+}
+
+.pipeline-stage:hover {
+    background: #eaeaea;
+}
+
+.pipeline-stage[aria-current="step"] {
+    background: white;
+
+    border-color: #0645ad;
+
+    box-shadow: inset 5px 0 0 #0645ad;
+
+    font-weight: bold;
+}
+
+.pipeline-stage--focus {
+    padding: 6px 9px;
+
+    background: #eef3fb;
+
+    border: 2px solid #0645ad;
+}
+
+.pipeline-stage--focus:hover {
+    background: #e2eaf7;
+}
+
+.stage-number {
+    color: #555555;
+
+    font-weight: normal;
+}
+
+.stage-meta {
+    grid-column: 2;
+
+    margin-top: 3px;
+
+    font-size: 12px;
+
+    font-weight: normal;
+}
+
+.stage-status {
+    font-weight: bold;
+}
+
+.stage-badge {
+    margin-left: 8px;
+
+    padding: 0 5px;
+
+    color: white;
+
+    background: #0645ad;
+}
+
+/*
+ * Arrow between two stages: a vertical line ending in a triangle.
+ */
+
+.pipeline-edge {
+    position: relative;
+
+    display: block;
+
+    min-height: 24px;
+
+    margin-left: 20px;
+
+    padding: 3px 0 3px 14px;
+
+    border-left: 2px solid #888888;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    color: #555555;
+}
+
+.pipeline-edge::after {
+    content: "";
+
+    position: absolute;
+
+    left: -6px;
+    bottom: -1px;
+
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 8px solid #888888;
+}
+
+.panel-position {
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+
+    color: #555555;
+}
+
+.stage-focus {
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    color: #0645ad;
+}
+
+.stage-nav {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #cccccc;
+}
+
+
+/*
+ * Optimization playground
+ */
+
+.explanation {
+    margin-top: 25px;
+
+    padding: 15px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #aaaaaa;
+}
+
+.explanation h3 {
+    margin: 0 0 6px;
+}
+
+.explanation p {
+    margin: 6px 0;
+}
+
+
+/*
+ * Assembly explorer
+ */
+
+.asm-box {
+    padding: 4px 0;
+}
+
+.asm-listing {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.asm-listing li {
+    margin: 0;
+}
+
+.asm-label-row {
+    padding: 2px 10px;
+}
+
+.asm-listing .asm-line {
+    display: block;
+
+    width: 100%;
+
+    padding: 1px 10px 1px 36px;
+
+    text-align: left;
+
+    font-family: inherit;
+
+    font-size: inherit;
+
+    line-height: inherit;
+
+    color: inherit;
+
+    white-space: pre;
+
+    background: transparent;
+
+    border: 0;
+
+    border-left: 3px solid transparent;
+
+    cursor: pointer;
+}
+
+.asm-listing .asm-line:hover {
+    background: #e8e8e8;
+}
+
+.asm-listing .asm-line[aria-current="true"] {
+    background: #ffef9f;
+
+    border-left-color: #b38600;
+}
+
+.asm-listing .asm-line code {
+    font-family: inherit;
+}
+
+.asm-selected {
+    margin: 0 0 6px;
+
+    font-size: 16px;
+}
+
+.asm-selected code {
+    padding: 2px 6px;
+
+    background: white;
+
+    border: 1px solid #cccccc;
+
+    font-family: "Courier New", Courier, monospace;
+}
+
+
+/*
+ * Responsive: the pipeline and the side-by-side code panes go to a
+ * single column before the page itself does, because the main column
+ * is narrow once the sidebar takes its share.
+ */
+
+@media (max-width: 960px) {
+
+    .arch,
+    .code-compare {
+        grid-template-columns: 1fr;
+    }
 }
 
 

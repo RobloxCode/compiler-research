@@ -32,6 +32,9 @@
         <nav aria-label="Main navigation">
             <a href="#home">Home</a>
             <a href="#compiler">Compiler</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#optimization-playground">Optimization Playground</a>
+            <a href="#assembly-explorer">Assembly Explorer</a>
             <a href="#experiments">Experiments</a>
             <a href="#benchmarks">Benchmarks</a>
             <a href="#research">Research</a>
@@ -56,6 +59,9 @@
                     <li><a href="#related-work">Related Work</a></li>
                     <li><a href="#compiler">Compiler</a></li>
                     <li><a href="compiler/lexer.html">Lexer</a></li>
+                    <li><a href="#architecture">Compiler Architecture</a></li>
+                    <li><a href="#optimization-playground">Optimization Playground</a></li>
+                    <li><a href="#assembly-explorer">Assembly Explorer</a></li>
                     <li><a href="#experiments">Experiments</a></li>
                     <li><a href="#methodology">Methodology</a></li>
                     <li><a href="#benchmarks">Benchmarks</a></li>
@@ -296,6 +302,319 @@
                 </table>
             </section>
 
+            <!-- Compiler Architecture -->
+            <section id="architecture" aria-labelledby="architectureTitle">
+                <h2 id="architectureTitle">Compiler Architecture</h2>
+                <p>
+                    A compiler is a pipeline: each stage reads the output of
+                    the previous one and produces a new representation of the
+                    program, from source text down to x86-64 code. Select a
+                    stage to see what it does, what goes in and out, and how
+                    far its implementation has progressed.
+                </p>
+                <p>
+                    The optimization stage is outlined because it is the
+                    focus of this research. The algorithms listed for each
+                    stage are the standard techniques for it, not a
+                    description of what this compiler currently uses.
+                    Implementation status is read from the same component
+                    list as the Compiler section above.
+                </p>
+
+                <noscript>
+                    <p class="notice">This diagram needs JavaScript. The stages are, in order: source code, lexer, parser, semantic analysis, IR generation, optimization passes, code generation, and assembly or object code generation.</p>
+                </noscript>
+
+                <div class="arch">
+                    <!-- Rendered from STAGES in architecture.js -->
+                    <ol id="pipelineStages" class="pipeline" aria-label="Compilation pipeline, in order"></ol>
+
+                    <section id="stagePanel" class="stage-panel" aria-labelledby="stageTitle">
+                        <p id="stagePosition" class="panel-position"></p>
+                        <h3 id="stageTitle">Source Code</h3>
+                        <p id="stageFocus" class="stage-focus" hidden>Primary focus of this research.</p>
+                        <p id="stageSummary"></p>
+
+                        <div id="stageDetails" aria-live="polite">
+                            <dl class="info-list">
+                                <dt>Purpose</dt>
+                                <dd id="stagePurpose"></dd>
+
+                                <dt>Input</dt>
+                                <dd id="stageInput"></dd>
+
+                                <dt>Output</dt>
+                                <dd id="stageOutput"></dd>
+
+                                <dt>Relevant algorithms and data structures</dt>
+                                <dd><ul id="stageTechniques"></ul></dd>
+
+                                <dt>Relationship with other stages</dt>
+                                <dd>
+                                    <span id="stageFlow"></span>
+                                    <span id="stageRelation"></span>
+                                </dd>
+
+                                <dt>Implementation status</dt>
+                                <dd id="stageStatus"></dd>
+                            </dl>
+                            <p id="stageLink" hidden></p>
+                        </div>
+
+                        <div class="stage-nav">
+                            <button type="button" id="stagePrevious">Previous stage</button>
+                            <button type="button" id="stageNext">Next stage</button>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- Optimization Playground -->
+            <section id="optimization-playground" aria-labelledby="optimizationPlaygroundTitle">
+                <h2 id="optimizationPlaygroundTitle">Optimization Playground</h2>
+                <p>
+                    Choose one of the seven optimizations studied in this
+                    research and apply it to a small example to see how the
+                    code changes and why the change is valid. The details of
+                    each technique are in the <a href="#experiments">Experiments</a> section.
+                </p>
+                <p class="notice">
+                    These are illustrative examples written by hand. They are
+                    not output from the compiler, and nothing on this page
+                    analyzes or transforms code.
+                </p>
+
+                <div class="control-bar">
+                    <label for="optSelect">Optimization</label>
+                    <select id="optSelect" name="optSelect"></select>
+                    <button type="button" id="optApply">Apply optimization</button>
+                    <button type="button" id="optReset">Reset</button>
+                </div>
+
+                <p id="optSummary" class="control-summary"></p>
+
+                <div class="code-compare">
+                    <div class="code-pane">
+                        <h3 id="optBeforeTitle">Original code</h3>
+                        <pre class="code" tabindex="0" role="group" aria-labelledby="optBeforeTitle"><code id="optBeforeCode"></code></pre>
+                    </div>
+
+                    <div class="code-pane">
+                        <h3 id="optAfterTitle">Optimized code</h3>
+                        <pre class="code" tabindex="0" role="group" aria-labelledby="optAfterTitle"><code id="optAfterCode"></code></pre>
+                    </div>
+                </div>
+
+                <p class="code-legend">
+                    After applying: red lines were replaced or removed, green
+                    lines are new or changed.
+                </p>
+                <p id="optDiffSummary" class="visually-hidden" role="status"></p>
+
+                <div class="explanation">
+                    <h3>Explanation</h3>
+
+                    <p id="optExplanationEmpty">
+                        Choose &ldquo;Apply optimization&rdquo; to see what
+                        changed, why it is valid and what it gains.
+                    </p>
+
+                    <div id="optExplanationBody" hidden>
+                        <dl class="info-list">
+                            <dt>What changed</dt>
+                            <dd id="optChanged"></dd>
+
+                            <dt>Why it is valid</dt>
+                            <dd id="optValid"></dd>
+
+                            <dt>Potential benefit</dt>
+                            <dd id="optBenefit"></dd>
+
+                            <dt>Limitations and conditions</dt>
+                            <dd><ul id="optLimits"></ul></dd>
+                        </dl>
+                        <p id="optNote" hidden></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assembly Explorer -->
+            <section id="assembly-explorer" aria-labelledby="assemblyExplorerTitle">
+                <h2 id="assemblyExplorerTitle">Assembly Explorer</h2>
+                <p>
+                    The compiler's final output is x86-64 code. This section
+                    shows small programs next to the assembly that implements
+                    them, with and without optimization. Select an
+                    instruction to see what it does and which source line it
+                    comes from.
+                </p>
+                <p class="notice">
+                    The assembly shown here was written by hand in the style
+                    of typical compiler output and checked by assembling and
+                    running it. It was not generated by this project's
+                    compiler.
+                </p>
+
+                <h3>Intel syntax</h3>
+                <p>
+                    All listings use Intel syntax: the destination comes
+                    first, so <code>mov eax, 8</code> copies 8 into
+                    <code>eax</code>. Registers and constants have no prefix,
+                    and a memory operand states its size, as in
+                    <code>DWORD PTR [rbp-4]</code> for four bytes at the
+                    address <code>rbp - 4</code>. GCC and LLVM print AT&amp;T
+                    syntax by default on Linux (<code>movl $8, %eax</code>);
+                    both notations describe the same machine instructions.
+                </p>
+
+                <h3>Instructions, operands and registers</h3>
+                <p>
+                    An instruction is a mnemonic, which says what to do,
+                    followed by up to three operands, which say what to do it
+                    to. An operand is a register, an immediate value (a
+                    constant stored in the instruction) or a location in
+                    memory. Registers are the processor's fastest storage.
+                    The ones used in this section are:
+                </p>
+
+                <table>
+                    <caption class="visually-hidden">Registers used in the examples</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Register</th>
+                            <th scope="col">Role in these examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>rax</code>, <code>eax</code></td>
+                            <td>Holds the return value. <code>eax</code> is the low 32 bits of <code>rax</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><code>rdi</code>, <code>rsi</code></td>
+                            <td>First and second integer arguments of a function (System V calling convention).</td>
+                        </tr>
+                        <tr>
+                            <td><code>rcx</code>, <code>rdx</code></td>
+                            <td>Fourth and third integer arguments; also free to use as scratch space.</td>
+                        </tr>
+                        <tr>
+                            <td><code>rsp</code></td>
+                            <td>Stack pointer: the top of the stack.</td>
+                        </tr>
+                        <tr>
+                            <td><code>rbp</code></td>
+                            <td>Frame pointer: the base of the current function's stack frame. Unoptimized code uses it to find local variables.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Assembly language and machine code</h3>
+                <p>
+                    Assembly is a text notation for processor instructions.
+                    Machine code is the binary encoding that the processor
+                    actually executes. An assembler translates one into the
+                    other, essentially one line to one instruction. The bytes
+                    below are shown in hexadecimal for these specific
+                    operands; other forms of the same instruction use other
+                    encodings.
+                </p>
+
+                <table>
+                    <caption class="visually-hidden">Assembly instructions and their machine code bytes</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Assembly</th>
+                            <th scope="col">Machine code (hex)</th>
+                            <th scope="col">Meaning of the bytes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>mov eax, 8</code></td>
+                            <td><code>B8 08 00 00 00</code></td>
+                            <td><code>B8</code> means &ldquo;move a 32-bit constant into eax&rdquo;. The next four bytes are the constant 8, least significant byte first.</td>
+                        </tr>
+                        <tr>
+                            <td><code>add eax, 5</code></td>
+                            <td><code>83 C0 05</code></td>
+                            <td><code>83</code> is an add with an 8-bit constant, <code>C0</code> selects eax, and <code>05</code> is the constant.</td>
+                        </tr>
+                        <tr>
+                            <td><code>xor eax, eax</code></td>
+                            <td><code>31 C0</code></td>
+                            <td><code>31</code> is xor, and <code>C0</code> names eax as both operands.</td>
+                        </tr>
+                        <tr>
+                            <td><code>ret</code></td>
+                            <td><code>C3</code></td>
+                            <td>A single byte.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Explore the examples</h3>
+
+                <div class="control-bar">
+                    <label for="asmExample">Example</label>
+                    <select id="asmExample" name="asmExample"></select>
+
+                    <span id="asmVariantLabel" class="control-label">Version</span>
+                    <div class="control-radios" role="radiogroup" aria-labelledby="asmVariantLabel">
+                        <label><input type="radio" name="asmVariant" value="unoptimized" checked> Unoptimized</label>
+                        <label><input type="radio" name="asmVariant" value="optimized"> Optimized</label>
+                    </div>
+                </div>
+
+                <p id="asmContext" class="control-summary"></p>
+
+                <div class="code-compare">
+                    <div class="code-pane">
+                        <h3 id="asmSourceTitle">Source code</h3>
+                        <pre class="code" tabindex="0" role="group" aria-labelledby="asmSourceTitle"><code id="asmSourceCode"></code></pre>
+                    </div>
+
+                    <div class="code-pane">
+                        <h3 id="asmListingTitle">x86-64 assembly (Intel syntax)</h3>
+                        <div class="code asm-box">
+                            <ul id="asmListing" class="asm-listing" aria-labelledby="asmListingTitle"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="asmVariantNote"></p>
+                <p id="asmCount" class="code-legend"></p>
+
+                <section id="asmPanel" class="stage-panel" aria-labelledby="asmPanelTitle">
+                    <h3 id="asmPanelTitle">Instruction details</h3>
+
+                    <div id="asmDetails" aria-live="polite">
+                        <p id="asmDetailEmpty">Select an instruction in the listing above.</p>
+
+                        <div id="asmDetailBody" hidden>
+                            <p class="asm-selected"><code id="asmSelectedCode"></code></p>
+
+                            <dl class="info-list">
+                                <dt>What it does</dt>
+                                <dd id="asmWhat"></dd>
+
+                                <dt>In this example</dt>
+                                <dd id="asmNote"></dd>
+
+                                <dt>Operands</dt>
+                                <dd>
+                                    <ul id="asmOperands"></ul>
+                                    <span id="asmNoOperands" hidden>This instruction has no operands.</span>
+                                </dd>
+
+                                <dt>Source line</dt>
+                                <dd><code id="asmSourceLine"></code></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
             <!-- Experiments -->
             <section id="experiments" aria-labelledby="experimentsTitle">
                 <h2 id="experimentsTitle">Experiments</h2>
@@ -533,6 +852,14 @@
             <section id="changelog" aria-labelledby="changelogTitle">
                 <h2 id="changelogTitle">Changelog</h2>
 
+                <h3>2026-11-04</h3>
+                <p>
+                    Added the Compiler Architecture visualization, the
+                    Optimization Playground and the Assembly Explorer, with
+                    updated navigation. All examples in them are illustrative
+                    and not output from the compiler.
+                </p>
+
                 <h3>2026-10-06</h3>
                 <p>
                     Added background, related work, scope, methodology and
@@ -579,13 +906,17 @@
 
     <!-- Footer -->
     <footer>
-        <p>Compiler Research · Last updated: 6 October 2026</p>
+        <p>Compiler Research · Last updated: 4 November 2026</p>
     </footer>
 
 </div>
 
 <!-- JavaScript -->
 <script src="script.js"></script>
+<script src="highlight.js"></script>
+<script src="architecture.js"></script>
+<script src="optimization-playground.js"></script>
+<script src="assembly-explorer.js"></script>
 
 </body>
 </html>
