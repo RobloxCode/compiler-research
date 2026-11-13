@@ -135,7 +135,7 @@
                     different compiler optimizations affect the performance
                     of generated programs: to design and implement a
                     didactic compiler for x86-64 that allows evaluating the
-                    individual and combined impact of seven classic
+                    individual and combined impact of eight classic
                     optimizations on code quality and execution time.
                 </p>
                 <p>
@@ -148,7 +148,7 @@
                 <h3>Specific objectives</h3>
                 <ul>
                     <li>Build a compiler for x86-64 with lexical analysis, parsing, intermediate code generation, optimization and object code generation.</li>
-                    <li>Implement each of the seven optimizations independently so they can be enabled or disabled one by one.</li>
+                    <li>Implement each of the eight optimizations independently so they can be enabled or disabled one by one.</li>
                     <li>Create a set of test programs (benchmarks) and a measurement protocol that makes the results reproducible.</li>
                     <li>Measure the individual and combined effect of each optimization on execution time and on code quality metrics (instruction count, binary size).</li>
                     <li>Compare the didactic compiler against GCC and LLVM at <code>-O2</code>/<code>-O3</code> as a reference for achievable performance.</li>
@@ -373,7 +373,7 @@
             <section id="optimization-playground" aria-labelledby="optimizationPlaygroundTitle">
                 <h2 id="optimizationPlaygroundTitle">Optimization Playground</h2>
                 <p>
-                    Choose one of the seven optimizations studied in this
+                    Choose one of the eight optimizations studied in this
                     research and apply it to a small example to see how the
                     code changes and why the change is valid. The details of
                     each technique are in the <a href="#experiments">Experiments</a> section.
@@ -629,48 +629,59 @@
                 </p>
                 <p>Status: <strong>Planned</strong></p>
 
-                <h3>Experiment 002 — Constant Propagation</h3>
-                <p>
-                    Replaces subsequent uses of a variable with its known constant value at a given point in the program. For example, if <code>a = 10</code> and later <code>b = a + 2</code> is used, it can be rewritten directly as <code>b = 12</code> when combined with constant folding. See also Wegman and Zadeck (1991) for propagation with conditional branches.
-                </p>
-                <p>Status: <strong>Planned</strong></p>
-
-                <h3>Experiment 003 — Dead Code Elimination (DCE)</h3>
-                <p>
-                    Removes instructions whose results are never used or that are unreachable (such as code following a <code>return</code> statement or variables assigned but never read), reducing code size without changing observable behavior. It often takes advantage of opportunities left by the previous optimizations (Muchnick, 1997).
-                </p>
-                <p>Status: <strong>Planned</strong></p>
-
-                <h3>Experiment 004 — Common Subexpression Elimination (CSE)</h3>
+                <h3>Experiment 002 — Common Subexpression Elimination (CSE)</h3>
                 <p>
                     Detects when the exact same expression is calculated multiple times with identical, unchanged operands, reusing the previously calculated result instead of recomputing it (Cocke, 1970).
                 </p>
                 <p>Status: <strong>Planned</strong></p>
 
-                <h3>Experiment 005 — Loop-Invariant Code Motion (LICM)</h3>
+                <h3>Experiment 003 — Loop-Invariant Code Motion (LICM)</h3>
                 <p>
                     Identifies computations inside a loop whose results do not change across iterations and moves them outside the loop so they execute only once instead of every iteration. It requires identifying the loops and verifying that the motion preserves semantics (Aho et al., 2006; Cooper &amp; Torczon, 2012).
                 </p>
                 <p>Status: <strong>Planned</strong></p>
 
-                <h3>Experiment 006 — Loop Unrolling</h3>
+                <h3>Experiment 004 — Loop Unrolling</h3>
                 <p>
                     Reduces the number of iterations in a loop by replicating its body multiple times within a single iteration, decreasing loop control overhead (comparisons, jumps, counter increments) at the cost of larger code size, which can affect the instruction cache (Dongarra &amp; Hinds, 1979; Davidson &amp; Jinturkar, 1995).
                 </p>
                 <p>Status: <strong>Planned</strong></p>
 
-                <h3>Experiment 007 — Auto-vectorization</h3>
+                <h3>Experiment 005 — Global Constant Propagation</h3>
                 <p>
-                    Transforms repetitive scalar operations (such as element-by-element array addition) into SIMD instructions that process multiple data points in parallel using processor vector registers (such as SSE/AVX on x86-64). Superword-level parallelism (SLP) is a key method for finding these opportunities (Larsen &amp; Amarasinghe, 2000). Success depends on the operations being independent and the data being well aligned in memory (Allen &amp; Kennedy, 2002; Maleki et al., 2011).
+                    Replaces uses of a variable with its known constant value across the whole function, including across basic blocks and branches. Data-flow analysis proves that every definition reaching the use assigns the same constant (Kildall, 1973). For example, if <code>k = 4</code> is assigned before an <code>if</code> statement and neither branch changes it, every later use of <code>k</code> can become <code>4</code>, and the result can then be folded. See also Wegman and Zadeck (1991) for propagation that also ignores branches that cannot be taken.
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 006 — Dead Assignment Elimination</h3>
+                <p>
+                    Removes assignments to a variable whose value is never read afterwards, either because it is overwritten first or because the variable is not used again. It relies on liveness analysis. If the right-hand side has side effects, such as a function call, the effect must be kept even when the assignment is removed (Aho et al., 2006; Muchnick, 1997). It often finds work left by constant propagation, which leaves the original assignments without readers.
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 007 — Function Inlining</h3>
+                <p>
+                    Replaces a call to a function with a copy of its body, with the arguments substituted for the parameters. It removes the cost of the call (argument passing, call and return, stack frame setup) and lets other optimizations work across what used to be the call boundary, at the cost of larger code (Muchnick, 1997; Cooper &amp; Torczon, 2012).
+                </p>
+                <p>Status: <strong>Planned</strong></p>
+
+                <h3>Experiment 008 — Unreachable Function Elimination</h3>
+                <p>
+                    Removes functions that can never be called. The compiler builds the call graph, marks every function reachable from the program's entry points (such as <code>main</code>) and deletes the rest, reducing binary size. Functions with external linkage must be kept unless the whole program is visible, and functions whose address is taken count as reachable (Muchnick, 1997).
                 </p>
                 <p>Status: <strong>Planned</strong></p>
 
                 <h3>Interaction between optimizations</h3>
                 <p>
                     Optimizations are not independent. Constant folding and
-                    propagation generate dead code that DCE removes, and
-                    unrolling can expose common or invariant subexpressions
-                    that other transformations exploit (Muchnick, 1997).
+                    global constant propagation leave assignments that
+                    nothing reads, which dead assignment elimination
+                    removes. Inlining exposes constants and common or
+                    invariant subexpressions that other transformations
+                    exploit, and it can leave the original function
+                    unreachable so that unreachable function elimination
+                    deletes it. Unrolling can also expose common or
+                    invariant subexpressions (Muchnick, 1997).
                     For this reason, besides the individual effect, the
                     research measures the combined effect and analyzes the
                     interactions between techniques.
@@ -852,6 +863,18 @@
             <section id="changelog" aria-labelledby="changelogTitle">
                 <h2 id="changelogTitle">Changelog</h2>
 
+                <h3>2026-11-12</h3>
+                <p>
+                    Updated the list of optimizations from seven to eight:
+                    constant folding, common subexpression elimination,
+                    loop-invariant code motion, loop unrolling, global
+                    constant propagation, dead assignment elimination,
+                    function inlining and unreachable function elimination.
+                    Dead code elimination and auto-vectorization were
+                    removed. The Experiments section and the Optimization
+                    Playground were updated to match.
+                </p>
+
                 <h3>2026-11-04</h3>
                 <p>
                     Added the Compiler Architecture visualization, the
@@ -878,7 +901,6 @@
                 <ul class="references">
                     <li>Aho, A. V., Lam, M. S., Sethi, R., &amp; Ullman, J. D. (2006). <cite>Compilers: Principles, techniques, and tools</cite> (2nd ed.). Addison-Wesley.</li>
                     <li>Allen, F. E. (1970). Control flow analysis. <em>ACM SIGPLAN Notices, 5</em>(7), 1–19.</li>
-                    <li>Allen, R., &amp; Kennedy, K. (2002). <cite>Optimizing compilers for modern architectures: A dependence-based approach</cite>. Morgan Kaufmann.</li>
                     <li>Appel, A. W. (2002). <cite>Modern compiler implementation in C</cite>. Cambridge University Press.</li>
                     <li>Ashouri, A. H., Killian, W., Cavazos, J., Palermo, G., &amp; Silvano, C. (2018). A survey on compiler autotuning using machine learning. <em>ACM Computing Surveys, 51</em>(5), 1–42.</li>
                     <li>Cocke, J. (1970). Global common subexpression elimination. <em>ACM SIGPLAN Notices, 5</em>(7), 20–24.</li>
@@ -891,7 +913,6 @@
                     <li>Hennessy, J. L., &amp; Patterson, D. A. (2017). <cite>Computer architecture: A quantitative approach</cite> (6th ed.). Morgan Kaufmann.</li>
                     <li>Hoste, K., &amp; Eeckhout, L. (2008). Cole: Compiler optimization level exploration. <em>Proceedings of the 6th Annual IEEE/ACM International Symposium on Code Generation and Optimization (CGO)</em>, 165–174.</li>
                     <li>Kildall, G. A. (1973). A unified approach to global program optimization. <em>Proceedings of the 1st ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages (POPL)</em>, 194–206.</li>
-                    <li>Larsen, S., &amp; Amarasinghe, S. (2000). Exploiting superword level parallelism with multimedia instruction sets. <em>Proceedings of the ACM SIGPLAN 2000 Conference on Programming Language Design and Implementation (PLDI)</em>, 145–156.</li>
                     <li>Lattner, C., &amp; Adve, V. (2004). LLVM: A compilation framework for lifelong program analysis &amp; transformation. <em>Proceedings of the International Symposium on Code Generation and Optimization (CGO)</em>, 75–86.</li>
                     <li>Maleki, S., Gao, Y., Garzarán, M. J., Wong, T., &amp; Padua, D. A. (2011). An evaluation of vectorizing compilers. <em>Proceedings of the 2011 International Conference on Parallel Architectures and Compilation Techniques (PACT)</em>, 372–382.</li>
                     <li>Muchnick, S. S. (1997). <cite>Advanced compiler design and implementation</cite>. Morgan Kaufmann.</li>
@@ -906,7 +927,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>Compiler Research · Last updated: 4 November 2026</p>
+        <p>Compiler Research · Last updated: 12 November 2026</p>
     </footer>
 
 </div>

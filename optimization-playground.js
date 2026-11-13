@@ -3,7 +3,7 @@
 /* ===============================================================
  * Optimization Playground
  *
- * Shows a predefined before/after pair for each of the seven
+ * Shows a predefined before/after pair for each of the eight
  * optimizations studied in this research. Nothing here analyzes or
  * transforms code: the "optimized" versions are written by hand to
  * illustrate each transformation. It is not output from the compiler.
@@ -48,8 +48,8 @@
                 "3 + 5 and 60 * 60 * 24 contain only constants, so they are " +
                 "computed at compile time and replaced by 8 and 86400. The " +
                 "return expression is unchanged: a and b are still " +
-                "variables, and seeing through them is the job of constant " +
-                "propagation.",
+                "variables, and seeing through them is the job of global " +
+                "constant propagation.",
             valid:
                 "Adding or multiplying the same constants always gives the " +
                 "same result, so computing it early cannot change what the " +
@@ -63,100 +63,6 @@
                 "Only expressions whose operands are all known constants can be folded.",
                 "Division by a constant zero must not be folded: it is an error at run time, and the compiler should leave it alone or report it.",
                 "Floating-point results must match the rounding behavior of the target."
-            ]
-        },
-        {
-            id: "constant-propagation",
-            name: "Constant Propagation",
-            summary:
-                "Replaces a use of a variable with its value when that value " +
-                "is a known constant at that point.",
-            before: {
-                code: [
-                    "int g(int n) {",
-                    "    int k = 4;",
-                    "    int y = n * k;",
-                    "    int z = k + k;",
-                    "    return y + z;",
-                    "}"
-                ],
-                marked: [3, 4]
-            },
-            after: {
-                code: [
-                    "int g(int n) {",
-                    "    int k = 4;",
-                    "    int y = n * 4;",
-                    "    int z = 4 + 4;",
-                    "    return y + z;",
-                    "}"
-                ],
-                marked: [3, 4]
-            },
-            changed:
-                "k is set to 4 and never changes, so each later use of k " +
-                "was replaced by 4. The assignment to k now has no readers. " +
-                "The new 4 + 4 can be folded into 8, and DCE can then " +
-                "remove k, which is why these passes are usually run " +
-                "together.",
-            valid:
-                "At each use, the only assignment to k that can reach it is " +
-                "k = 4. Reaching-definitions analysis proves this. If some " +
-                "path could give k another value, the replacement would be " +
-                "wrong.",
-            benefit:
-                "A variable read becomes an immediate operand in the " +
-                "instruction, and it exposes new folding and DCE " +
-                "opportunities.",
-            limits: [
-                "Every definition that reaches the use must assign the same constant. After a branch that sets k to 4 on one path and 5 on the other, k is not a constant.",
-                "Variables that can be changed through a pointer, or that are volatile, cannot be propagated without more analysis.",
-                "Sparse conditional constant propagation (Wegman and Zadeck, 1991) is more precise: it also ignores branches whose condition is a known constant."
-            ]
-        },
-        {
-            id: "dead-code-elimination",
-            name: "Dead Code Elimination (DCE)",
-            summary:
-                "Removes code whose result is never used or that can never " +
-                "execute.",
-            before: {
-                code: [
-                    "int h(int x) {",
-                    "    int unused = x * 7;",
-                    "    int y = x + 1;",
-                    "    return y;",
-                    "    y = y * 2;",
-                    "}"
-                ],
-                marked: [2, 5]
-            },
-            after: {
-                code: [
-                    "int h(int x) {",
-                    "    int y = x + 1;",
-                    "    return y;",
-                    "}"
-                ],
-                marked: []
-            },
-            changed:
-                "Two statements were removed. unused is computed but never " +
-                "read, and y = y * 2 comes after the return, so it can " +
-                "never run.",
-            valid:
-                "A computation whose result is never used can be deleted " +
-                "when it has no side effects: multiplying integers writes " +
-                "no memory, calls nothing and does no I/O. Code after a " +
-                "return is unreachable, so it cannot affect the behavior.",
-            benefit:
-                "Smaller code and fewer instructions executed. DCE also " +
-                "cleans up what folding and propagation leave behind, such " +
-                "as variables that are no longer read.",
-            limits: [
-                "Statements with side effects must stay even when their result is unused: function calls, writes through pointers and accesses to volatile objects.",
-                "Deciding that a value is unused needs liveness analysis over all paths, including loops.",
-                "Finding unreachable code needs the control-flow graph."
             ]
         },
         {
@@ -304,68 +210,235 @@
             ]
         },
         {
-            id: "auto-vectorization",
-            name: "Auto-vectorization",
+            id: "global-constant-propagation",
+            name: "Global Constant Propagation",
             summary:
-                "Replaces repeated scalar operations with SIMD instructions " +
-                "that process several values at once.",
+                "Replaces a use of a variable with its value when that value " +
+                "is the same known constant on every path that reaches the " +
+                "use, even across branches.",
             before: {
                 code: [
-                    "float a[1024], b[1024], c[1024];",
-                    "",
-                    "void add(void) {",
-                    "    for (int i = 0; i < 1024; i++) {",
-                    "        c[i] = a[i] + b[i];",
+                    "int g(int n) {",
+                    "    int k = 4;",
+                    "    int m;",
+                    "    if (n > 0) {",
+                    "        m = 10;",
+                    "    } else {",
+                    "        m = 10;",
                     "    }",
+                    "    return n * k + m;",
                     "}"
                 ],
-                marked: [4, 5]
+                marked: [9]
             },
             after: {
                 code: [
-                    "#include <xmmintrin.h>",
-                    "",
-                    "float a[1024], b[1024], c[1024];",
-                    "",
-                    "void add(void) {",
-                    "    for (int i = 0; i < 1024; i += 4) {",
-                    "        __m128 va = _mm_loadu_ps(&a[i]);",
-                    "        __m128 vb = _mm_loadu_ps(&b[i]);",
-                    "        _mm_storeu_ps(&c[i], _mm_add_ps(va, vb));",
+                    "int g(int n) {",
+                    "    int k = 4;",
+                    "    int m;",
+                    "    if (n > 0) {",
+                    "        m = 10;",
+                    "    } else {",
+                    "        m = 10;",
                     "    }",
+                    "    return n * 4 + 10;",
                     "}"
                 ],
-                marked: [1, 6, 7, 8, 9]
+                marked: [9]
             },
             changed:
-                "The scalar loop adds one pair of floats per iteration. " +
-                "Each iteration of the new loop loads four consecutive " +
-                "floats from a and from b into 128-bit SSE registers, adds " +
-                "the four pairs with one instruction and stores four " +
-                "results. There are 256 iterations instead of 1024.",
+                "k is set to 4 before the if and neither branch changes it, " +
+                "so its use in the return became 4. m is assigned 10 in both " +
+                "branches, so after the branches join it still holds the " +
+                "constant 10, and its use became 10. The assignments to k " +
+                "and m now have no readers, and dead assignment elimination " +
+                "can remove them.",
             valid:
-                "Each iteration is independent of the others, and a, b and " +
-                "c are different arrays, so computing four elements at once " +
-                "gives the same values as computing them one by one. 1024 " +
-                "is a multiple of 4, so no scalar remainder loop is needed, " +
-                "and the unaligned load and store instructions work for any " +
-                "address.",
+                "Data-flow analysis (reaching definitions) walks the " +
+                "control-flow graph and combines the facts from both " +
+                "branches at the join. The only definition of k that reaches " +
+                "the return is k = 4, and both definitions of m that reach " +
+                "it assign 10, so every possible execution sees the same " +
+                "values. This is what makes it global: the facts travel " +
+                "across basic blocks instead of staying inside one.",
             benefit:
-                "Up to four times fewer arithmetic and memory instructions " +
-                "in this loop. With AVX, eight floats fit in one register. " +
-                "The real speedup depends on the memory bandwidth and the " +
-                "processor.",
+                "Variable reads become immediate operands, which frees " +
+                "registers, and the constants expose more folding, dead " +
+                "assignments and branches with a known condition.",
             limits: [
-                "Iterations must be independent. A dependence such as a[i] = a[i - 1] + b[i] prevents this simple form.",
-                "The compiler must prove the arrays do not overlap, or insert a run-time check.",
-                "When the trip count is not a multiple of the vector width, a scalar loop must handle the remaining elements.",
-                "Summing floats in a different order changes rounding, so reductions are vectorized only when the compiler is allowed to reorder them (for example with -ffast-math)."
+                "If the branches assigned different values, such as 10 and 20, m would not be a constant at the join and could not be replaced.",
+                "A variable that changes inside a loop is not constant at the loop header, so the analysis must iterate over the loop until its facts stop changing.",
+                "Variables whose address is taken, or that are volatile, cannot be propagated without more analysis, since a write through a pointer could change them.",
+                "Sparse conditional constant propagation (Wegman and Zadeck, 1991) is more precise: it also ignores branches whose condition is a known constant."
+            ]
+        },
+        {
+            id: "dead-assignment-elimination",
+            name: "Dead Assignment Elimination",
+            summary:
+                "Removes an assignment whose value is never read afterwards, " +
+                "because the variable is overwritten first or never used " +
+                "again (also called dead store elimination).",
+            before: {
+                code: [
+                    "int h(int x) {",
+                    "    int a = x * 7;",
+                    "    a = x + 1;",
+                    "    int b = a * 2;",
+                    "    int c = a + 3;",
+                    "    return c;",
+                    "}"
+                ],
+                marked: [2, 4]
+            },
+            after: {
+                code: [
+                    "int h(int x) {",
+                    "    int a = x + 1;",
+                    "    int c = a + 3;",
+                    "    return c;",
+                    "}"
+                ],
+                marked: []
+            },
+            changed:
+                "Two assignments were removed. The value that a receives from " +
+                "x * 7 on line 2 is overwritten on line 3 before anything " +
+                "reads it, and b on line 4 is computed but never read. The " +
+                "assignment on line 3 now initializes a directly.",
+            valid:
+                "Liveness analysis runs backward from the end of the " +
+                "function. Right after line 2 the next thing that happens to " +
+                "a is a new assignment, so the old value is not live, and b " +
+                "is never live at all. Removing an assignment that no later " +
+                "instruction reads cannot change the result, and x * 7 and " +
+                "a * 2 have no side effects.",
+            benefit:
+                "Fewer instructions executed and fewer registers or stack " +
+                "slots in use. It also cleans up the assignments that " +
+                "constant propagation leaves without readers.",
+            limits: [
+                "An assignment is dead only if it is dead on every path. If a single path can read the value, the assignment must stay.",
+                "If the right-hand side has side effects, such as a function call, the assignment can be removed but the call must stay.",
+                "Stores to memory (through pointers, arrays or volatile objects) need alias information to prove that nobody reads them later.",
+                "Liveness over loops needs the analysis to iterate until its results stop changing."
+            ]
+        },
+        {
+            id: "function-inlining",
+            name: "Function Inlining",
+            summary:
+                "Replaces a call with a copy of the function body, with the " +
+                "arguments substituted for the parameters.",
+            before: {
+                code: [
+                    "int square(int x) {",
+                    "    return x * x;",
+                    "}",
+                    "",
+                    "int f(int a) {",
+                    "    return square(a) + 1;",
+                    "}"
+                ],
+                marked: [6]
+            },
+            after: {
+                code: [
+                    "int square(int x) {",
+                    "    return x * x;",
+                    "}",
+                    "",
+                    "int f(int a) {",
+                    "    return a * a + 1;",
+                    "}"
+                ],
+                marked: [6]
+            },
+            changed:
+                "The call square(a) was replaced by the body of square, with " +
+                "the argument a in place of the parameter x. f no longer " +
+                "calls anything, so the call, the return and the argument " +
+                "passing disappear from it. square itself stays in the file " +
+                "because other code may still call it.",
+            valid:
+                "The body only reads its parameter and has no side effects, " +
+                "so running it in place gives the same value as calling it. " +
+                "The argument is a plain variable, so using it twice in a * a " +
+                "evaluates nothing twice. If the argument were an expression " +
+                "with side effects, such as another call or i++, the " +
+                "compiler would first store it in a temporary.",
+            benefit:
+                "The cost of the call disappears: passing arguments, the " +
+                "call and return instructions and the stack frame setup. " +
+                "It also lets later passes see through the old boundary, " +
+                "for example folding the whole expression if a were a " +
+                "known constant.",
+            limits: [
+                "Recursive functions cannot be inlined without limit, because each copy contains another call.",
+                "Every inlined call site gets its own copy of the body, so code size grows. Compilers use size and cost heuristics to decide.",
+                "The compiler must see the body of the function. Functions defined in another file, or called through a function pointer, cannot be inlined in the simple case.",
+                "Parameters, local variables and return statements must be renamed or rewritten so the copy does not clash with the caller's variables."
             ],
             note:
-                "The SSE intrinsics are written out only to show the effect. " +
-                "A compiler performs this change on its IR or machine " +
-                "instructions; the programmer does not write intrinsics for " +
-                "it to happen."
+                "Compilers inline on their IR, not on the source text. The " +
+                "rewritten C is shown only to illustrate the effect."
+        },
+        {
+            id: "unreachable-function-elimination",
+            name: "Unreachable Function Elimination",
+            summary:
+                "Removes functions that can never be called, found by " +
+                "following the calls that start at the program entry point.",
+            before: {
+                code: [
+                    "static int helper(int x) {",
+                    "    return x * 3;",
+                    "}",
+                    "",
+                    "static int unused(int x) {",
+                    "    return helper(x) + 1;",
+                    "}",
+                    "",
+                    "int main(void) {",
+                    "    return helper(4);",
+                    "}"
+                ],
+                marked: [5, 6, 7]
+            },
+            after: {
+                code: [
+                    "static int helper(int x) {",
+                    "    return x * 3;",
+                    "}",
+                    "",
+                    "int main(void) {",
+                    "    return helper(4);",
+                    "}"
+                ],
+                marked: []
+            },
+            changed:
+                "unused was removed because nothing reachable from main " +
+                "calls it. helper stays because main calls it. The call to " +
+                "helper inside unused does not count: only calls made by " +
+                "reachable functions matter.",
+            valid:
+                "The compiler builds the call graph and marks every function " +
+                "reachable from the entry point, main. A function that is " +
+                "not marked can never execute, so deleting it cannot change " +
+                "the behavior. Here it is safe because both functions are " +
+                "static, so no other file can call them.",
+            benefit:
+                "A smaller binary and less code to compile, load and keep in " +
+                "memory. It can also help other passes: once unused is gone, " +
+                "helper has a single caller, which makes it a better " +
+                "candidate for inlining.",
+            limits: [
+                "A function with external linkage must be kept unless the compiler sees the whole program (for example with link-time optimization), because another file may call it.",
+                "A function whose address is taken counts as reachable, and an indirect call must be assumed to reach any such function.",
+                "Reachability is what matters, not the number of callers: functions that only call each other, but are never reached from the entry point, are all removed.",
+                "Libraries and programs with several entry points need every exported function treated as an entry point."
+            ]
         }
     ];
 
