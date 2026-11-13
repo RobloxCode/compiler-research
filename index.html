@@ -622,6 +622,15 @@
                     Experiments will be used to measure the effect of
                     individual optimization techniques.
                 </p>
+                <p>
+                    The optimizations studied in this project are the ones
+                    presented in <cite>Engineering a Compiler</cite> by
+                    Cooper and Torczon (2012). That book classifies
+                    optimizations by scope, that is, by how much of the
+                    program a transformation has to analyze, from a single
+                    basic block up to the whole program. The eight
+                    experiments below follow that selection.
+                </p>
 
                 <h3>Experiment 001 — Constant Folding</h3>
                 <p>
@@ -872,7 +881,10 @@
                     function inlining and unreachable function elimination.
                     Dead code elimination and auto-vectorization were
                     removed. The Experiments section and the Optimization
-                    Playground were updated to match.
+                    Playground were updated to match, and the Experiments
+                    section now states that the optimizations come from
+                    <cite>Engineering a Compiler</cite> (Cooper &amp;
+                    Torczon, 2012), which classifies them by scope.
                 </p>
 
                 <h3>2026-11-04</h3>
